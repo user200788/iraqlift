@@ -198,12 +198,20 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl space-y-4">
-                    <h3 class="text-base font-bold text-white border-b border-gray-800 pb-2">🏆 1. إضافة بطولة جديدة</h3>
+                    <h3 class="text-base font-bold text-white border-b border-gray-800 pb-2">🏆 1. إضافة / تعديل بطولة</h3>
                     <form onsubmit="submitNewChampionship(event)" class="space-y-3">
+                        <input type="hidden" id="adm-c-id">
                         <input type="text" id="adm-c-name" placeholder="اسم البطولة" class="form-input-custom" required>
+                        <select id="adm-c-type" class="form-input-custom font-bold text-brand-400" required>
+                            <option value="powerlifting">بطولة بورلفتنج (كاملة)</option>
+                            <option value="benchpress">بطولة بنج برس فقط (Bench Press)</option>
+                        </select>
                         <input type="text" id="adm-c-location" placeholder="المكان (مثلاً: بغداد)" class="form-input-custom" required>
                         <input type="date" id="adm-c-date" class="form-input-custom" required>
-                        <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 rounded-lg text-xs">حفظ البطولة</button>
+                        <div class="flex gap-2">
+                            <button type="submit" id="adm-c-btn-submit" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 rounded-lg text-xs">حفظ البطولة</button>
+                            <button type="button" id="adm-c-btn-cancel" onclick="resetChampionshipForm()" class="hidden bg-gray-800 text-gray-300 font-bold px-3 py-2.5 rounded-lg text-xs">إلغاء</button>
+                        </div>
                     </form>
                 </div>
 
@@ -226,20 +234,23 @@
                 </div>
 
                 <div class="lg:col-span-3 bg-gray-900 border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
-                    <div class="border-b border-gray-800 pb-3">
-                        <h3 class="text-xl font-black text-white">📊 4. تسجيل لاعب ونتائجه داخل البطولة (IPF Score Sheet)</h3>
+                    <div class="border-b border-gray-800 pb-3 flex justify-between items-center">
+                        <h3 id="adm-r-form-title" class="text-xl font-black text-white">📊 4. تسجيل / تعديل أرقام لاعب داخل البطولة (IPF Score Sheet)</h3>
+                        <button type="button" id="adm-r-btn-cancel" onclick="resetResultForm()" class="hidden bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold px-3 py-1 rounded-lg text-xs">إلغاء التعديل</button>
                     </div>
 
                     <form onsubmit="submitLifterResult(event)" class="space-y-6">
+                        <input type="hidden" id="adm-r-id">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
                                 <label class="block text-xs font-bold text-gray-300 mb-1">البطولة *</label>
-                                <select id="adm-r-champ-select" class="form-input-custom text-brand-400 font-bold" required></select>
+                                <select id="adm-r-champ-select" onchange="handleAdminChampTypeChange()" class="form-input-custom text-brand-400 font-bold" required></select>
                             </div>
 
                             <div>
                                 <label class="block text-xs font-bold text-gray-300 mb-1">اللاعب *</label>
-                                <select id="adm-r-lifter-select" class="form-input-custom text-white font-bold" required></select>
+                                <input type="text" id="adm-r-lifter-search" oninput="filterAdminLifterDropdown()" placeholder="🔍 ابحث عن اسم اللاعب..." class="form-input-custom mb-1 text-xs">
+                                <select id="adm-r-lifter-select" onchange="autoFillLifterDetailsInAdmin()" class="form-input-custom text-white font-bold" required></select>
                             </div>
 
                             <div>
@@ -279,7 +290,7 @@
                         <div class="bg-[#0f172a] p-4 rounded-xl border border-gray-800 space-y-3">
                             <span class="text-xs font-bold text-brand-400 uppercase">الرفعات الناجحة (كغم)</span>
                             <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                                <div>
+                                <div id="container-adm-squat">
                                     <label class="block text-xs text-gray-400 mb-1">Squat</label>
                                     <input type="number" step="0.5" id="adm-r-squat" oninput="calculateTotalInAdmin()" placeholder="0.0" class="form-input-custom" required>
                                 </div>
@@ -287,7 +298,7 @@
                                     <label class="block text-xs text-gray-400 mb-1">Bench</label>
                                     <input type="number" step="0.5" id="adm-r-bench" oninput="calculateTotalInAdmin()" placeholder="0.0" class="form-input-custom" required>
                                 </div>
-                                <div>
+                                <div id="container-adm-deadlift">
                                     <label class="block text-xs text-gray-400 mb-1">Deadlift</label>
                                     <input type="number" step="0.5" id="adm-r-deadlift" oninput="calculateTotalInAdmin()" placeholder="0.0" class="form-input-custom" required>
                                 </div>
@@ -298,7 +309,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl shadow-lg transition">
+                        <button type="submit" id="adm-r-submit-btn" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl shadow-lg transition">
                             تثبيت النتيجة بجدول البطولة
                         </button>
                     </form>
@@ -306,15 +317,20 @@
 
                 <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
                     <div class="bg-gray-900 border border-red-900/30 rounded-2xl p-6 shadow-xl space-y-4">
-                        <h3 class="text-base font-bold text-red-400 border-b border-gray-800 pb-2">🗑️ حذف بطولة من النظام</h3>
+                        <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+                            <h3 class="text-base font-bold text-red-400">🗑️ / ✏️ تعديل أو حذف بطولة</h3>
+                        </div>
                         <div class="space-y-3">
                             <select id="adm-delete-champ-select" class="form-input-custom"></select>
-                            <button onclick="deleteSelectedChampionship()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-lg text-xs">حذف البطولة ونتائجها نهائياً</button>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="editSelectedChampionship()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-lg text-xs">✏️ تعديل بيانات البطولة</button>
+                                <button onclick="deleteSelectedChampionship()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-lg text-xs">🗑️ حذف البطولة ونتائجها</button>
+                            </div>
                         </div>
                     </div>
 
                     <div class="bg-gray-900 border border-red-900/30 rounded-2xl p-6 shadow-xl space-y-4">
-                        <h3 class="text-base font-bold text-red-400 border-b border-gray-800 pb-2">🗑️ حذف لاعب من النظام</h3>
+                        <h3 class="text-base font-bold text-red-400 border-b border-gray-800 pb-2">🗑️ حذف لاعب تماماً من قاعدة البيانات</h3>
                         <div class="space-y-3">
                             <select id="adm-delete-lifter-select" class="form-input-custom"></select>
                             <button onclick="deleteSelectedLifter()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-lg text-xs">حذف اللاعب وسجله نهائياً</button>
@@ -342,9 +358,8 @@
                 <button id="m-edit-lifter-btn" onclick="toggleEditLifterForm()" class="hidden bg-brand-600/20 hover:bg-brand-600 text-brand-400 hover:text-white border border-brand-500/30 px-3 py-1.5 rounded-lg text-xs font-bold transition">✏️ تعديل البيانات</button>
             </div>
 
-            <!-- نموذج تعديل معلومات اللاعب (للأدمن فقط) -->
             <form id="m-edit-lifter-form" onsubmit="saveLifterProfileEdits(event)" class="hidden bg-gray-950 p-4 rounded-xl border border-brand-500/30 space-y-3">
-                <h4 class="text-xs font-extrabold text-brand-400 uppercase">تعديل معلومات اللاعب الحالية</h4>
+                <h4 class="text-xs font-extrabold text-brand-400 uppercase">تعديل معلومات اللاعب الحالية (خاص بالأدمن)</h4>
                 <input type="hidden" id="edit-lifter-id">
                 <div>
                     <label class="block text-[11px] font-bold text-gray-300 mb-1">اسم اللاعب الثلاثي</label>
@@ -416,7 +431,6 @@
         }
 
         function switchTab(tabId) {
-            // حماية لوحة التحكم: التوجيه لصفحة التسجيل إذا لم يكن المشرف مسجلاً
             if (tabId === 'admin') {
                 const isAdmin = localStorage.getItem('adminSessionActive') === 'true';
                 if (!isAdmin) {
@@ -449,7 +463,7 @@
             return lifters || [];
         }
 
-        // 1. HOME: CARDS VIEW
+        // HOME: CARDS VIEW
         async function loadChampionshipsList() {
             await fetchAllLiftersMap();
             const grid = document.getElementById('championships-cards-grid');
@@ -467,10 +481,20 @@
 
         function renderChampionshipCards(list) {
             const grid = document.getElementById('championships-cards-grid');
-            grid.innerHTML = list.map(c => `
-                <div class="bg-gray-900 border border-gray-800 hover:border-brand-500 rounded-2xl p-6 shadow-xl flex flex-col justify-between space-y-4 transition">
+            const isAdmin = localStorage.getItem('adminSessionActive') === 'true';
+
+            grid.innerHTML = list.map(c => {
+                const isBenchOnly = c.type === 'benchpress';
+                return `
+                <div class="bg-gray-900 border border-gray-800 hover:border-brand-500 rounded-2xl p-6 shadow-xl flex flex-col justify-between space-y-4 transition relative">
                     <div>
-                        <span class="px-2.5 py-0.5 bg-brand-500/10 text-brand-400 text-xs font-extrabold rounded">بطولة رسمية</span>
+                        <div class="flex items-center justify-between">
+                            <div class="flex gap-2">
+                                <span class="px-2.5 py-0.5 bg-brand-500/10 text-brand-400 text-xs font-extrabold rounded">بطولة رسمية</span>
+                                ${isBenchOnly ? '<span class="px-2.5 py-0.5 bg-amber-500/20 text-amber-400 text-xs font-extrabold rounded">بنج برس فقط</span>' : ''}
+                            </div>
+                            ${isAdmin ? `<button onclick="prepareEditChampionshipDirect('${c.id}')" class="text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-white px-2 py-1 rounded-lg font-bold border border-amber-500/30">✏️ تعديل البطولة</button>` : ''}
+                        </div>
                         <h3 class="text-xl font-black text-white mt-2">${c.name}</h3>
                         <p class="text-xs text-gray-400 font-semibold mt-1">📍 ${c.location} | 📅 ${c.date}</p>
                     </div>
@@ -478,7 +502,7 @@
                         عرض نتائج البطولة والجداول بالكامل ➔
                     </button>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function filterChampionshipsCards() {
@@ -487,7 +511,7 @@
             renderChampionshipCards(filtered);
         }
 
-        // 2. OPEN A SELECTED CHAMPIONSHIP AND EXPOSE ALL WEIGHT CLASSES
+        // OPEN A SELECTED CHAMPIONSHIP AND EXPOSE ALL WEIGHT CLASSES
         async function openChampionshipDetails(champId) {
             document.getElementById('championships-list-view').classList.add('hidden');
             document.getElementById('championship-detail-view').classList.remove('hidden');
@@ -498,11 +522,20 @@
             }
 
             const champ = cachedChampionships.find(c => c.id == champId);
+            const isBenchOnly = champ && champ.type === 'benchpress';
+            const isAdmin = localStorage.getItem('adminSessionActive') === 'true';
+
             const headerContainer = document.getElementById('single-champ-header');
             const tablesContainer = document.getElementById('single-champ-tables-container');
 
             headerContainer.innerHTML = `
-                <span class="px-2.5 py-1 bg-brand-500/10 text-brand-400 text-xs font-extrabold rounded">IPF Score Sheet</span>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 bg-brand-500/10 text-brand-400 text-xs font-extrabold rounded">IPF Score Sheet</span>
+                        ${isBenchOnly ? '<span class="px-2.5 py-1 bg-amber-500/20 text-amber-400 text-xs font-extrabold rounded">بطولة بنج برس فقط</span>' : ''}
+                    </div>
+                    ${isAdmin ? `<button onclick="prepareEditChampionshipDirect('${champ.id}')" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition">⚙️ تعديل بيانات هذه البطولة</button>` : ''}
+                </div>
                 <h2 class="text-3xl font-black text-white mt-1">${champ ? champ.name : 'البطولة'}</h2>
                 <p class="text-xs text-gray-400 font-bold mt-1">📍 المكان: ${champ ? champ.location : '-'} | 📅 التاريخ: ${champ ? champ.date : '-'}</p>
             `;
@@ -537,17 +570,20 @@
                                         <th class="text-center">الفئة العمرية</th>
                                         <th class="text-center">الميلاد</th>
                                         <th>النادي / المحافظة</th>
-                                        <th class="text-center">Squat</th>
+                                        ${!isBenchOnly ? '<th class="text-center">Squat</th>' : ''}
                                         <th class="text-center">Bench</th>
-                                        <th class="text-center">Deadlift</th>
+                                        ${!isBenchOnly ? '<th class="text-center">Deadlift</th>' : ''}
                                         <th class="text-center text-brand-400">Total</th>
+                                        ${isAdmin ? '<th class="text-center">إدارة الأدمن</th>' : ''}
                                     </tr>
                                 </thead>
                                 <tbody>
                 `;
 
+                const colSpan = (isBenchOnly ? 7 : 9) + (isAdmin ? 1 : 0);
+
                 if (filtered.length === 0) {
-                    html += `<tr><td colspan="9" class="text-center py-4 text-xs text-gray-500 font-bold">لا توجد محاولات مسجلة لهذه الفئة الوزنية.</td></tr>`;
+                    html += `<tr><td colspan="${colSpan}" class="text-center py-4 text-xs text-gray-500 font-bold">لا توجد محاولات مسجلة لهذه الفئة الوزنية.</td></tr>`;
                 } else {
                     filtered.forEach((r, idx) => {
                         const rank = idx + 1;
@@ -567,10 +603,18 @@
                                 <td class="text-center text-gray-300">${r.age_category || 'متقدمين'}</td>
                                 <td class="text-center text-gray-400">${lifter.birth_year || '-'}</td>
                                 <td class="text-gray-300">${lifter.club || 'مستقل'}</td>
-                                <td class="text-center font-bold text-gray-200">${r.squat} kg</td>
-                                <td class="text-center font-bold text-gray-200">${r.bench} kg</td>
-                                <td class="text-center font-bold text-gray-200">${r.deadlift} kg</td>
+                                ${!isBenchOnly ? `<td class="text-center font-bold text-gray-200">${r.squat || 0} kg</td>` : ''}
+                                <td class="text-center font-bold text-gray-200">${r.bench || 0} kg</td>
+                                ${!isBenchOnly ? `<td class="text-center font-bold text-gray-200">${r.deadlift || 0} kg</td>` : ''}
                                 <td class="text-center font-black text-brand-400 text-base bg-brand-500/5">${r.total} kg</td>
+                                ${isAdmin ? `
+                                    <td class="text-center">
+                                        <div class="flex items-center justify-center gap-1">
+                                            <button onclick="prepareEditLifterResult('${r.id}')" class="bg-amber-600/20 hover:bg-amber-600 text-amber-400 hover:text-white border border-amber-500/30 px-2.5 py-1 rounded text-xs font-bold transition">✏️ تعديل الأرقام</button>
+                                            <button onclick="removeLifterFromChampionshipOnly('${r.id}', '${champId}')" title="حذف من هذه البطولة فقط" class="bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/30 px-2 py-1 rounded text-xs font-bold transition">🗑️ إلغاء المشاركة</button>
+                                        </div>
+                                    </td>
+                                ` : ''}
                             </tr>
                         `;
                     });
@@ -592,30 +636,80 @@
             document.getElementById('championships-list-view').classList.remove('hidden');
         }
 
-        // 3. ADMIN DROPDOWNS AND ADJUSTING WEIGHT CATEGORIES
+        // ADMIN DROPDOWNS AND AUTO-FILL
         async function loadAdminDataDropdowns() {
             adjustWeightClassesInAdmin();
 
             const champSelect = document.getElementById('adm-r-champ-select');
-            const lifterSelect = document.getElementById('adm-r-lifter-select');
             const deleteChampSelect = document.getElementById('adm-delete-champ-select');
-            const deleteLifterSelect = document.getElementById('adm-delete-lifter-select');
 
-            const { data: champs } = await _supabase.from('championships').select('id, name').order('date', { ascending: false });
+            const { data: champs } = await _supabase.from('championships').select('*').order('date', { ascending: false });
             if (champs) {
-                const champOptions = '<option value="">-- اختر البطولة --</option>' + champs.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+                cachedChampionships = champs;
+                const champOptions = '<option value="">-- اختر البطولة --</option>' + champs.map(c => `<option value="${c.id}">${c.name} ${c.type === 'benchpress' ? '(بنج برس فقط)' : ''}</option>`).join('');
                 if (champSelect) champSelect.innerHTML = champOptions;
                 if (deleteChampSelect) deleteChampSelect.innerHTML = champOptions;
             }
 
             await fetchAllLiftersMap();
-            const sortedLifters = Object.values(cachedLiftersMap).sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+            populateAdminLifterSelect();
+        }
 
-            if (sortedLifters) {
-                const lifterOptions = '<option value="">-- اختر اللاعب --</option>' + sortedLifters.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
-                if (lifterSelect) lifterSelect.innerHTML = lifterOptions;
-                if (deleteLifterSelect) deleteLifterSelect.innerHTML = lifterOptions;
+        function populateAdminLifterSelect(filterText = '') {
+            const lifterSelect = document.getElementById('adm-r-lifter-select');
+            const deleteLifterSelect = document.getElementById('adm-delete-lifter-select');
+            
+            let sortedLifters = Object.values(cachedLiftersMap).sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+            if (filterText) {
+                sortedLifters = sortedLifters.filter(l => l.name.toLowerCase().includes(filterText.toLowerCase()));
             }
+
+            const lifterOptions = '<option value="">-- اختر اللاعب --</option>' + sortedLifters.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
+            if (lifterSelect) lifterSelect.innerHTML = lifterOptions;
+            if (deleteLifterSelect && !filterText) deleteLifterSelect.innerHTML = lifterOptions;
+        }
+
+        function filterAdminLifterDropdown() {
+            const query = document.getElementById('adm-r-lifter-search').value;
+            populateAdminLifterSelect(query);
+        }
+
+        // AUTO FILL PREVIOUS DATA WHEN SELECTING A LIFTER IN ADMIN FORM
+        function autoFillLifterDetailsInAdmin() {
+            const lifterId = document.getElementById('adm-r-lifter-select').value;
+            if (!lifterId) return;
+
+            const lifter = cachedLiftersMap[lifterId];
+            if (lifter) {
+                if (lifter.club) document.getElementById('adm-r-club').value = lifter.club;
+                if (lifter.birth_year) document.getElementById('adm-r-year').value = lifter.birth_year;
+                if (lifter.gender) document.getElementById('adm-r-gender').value = lifter.gender;
+            }
+        }
+
+        function handleAdminChampTypeChange() {
+            const champId = document.getElementById('adm-r-champ-select').value;
+            const champ = cachedChampionships.find(c => c.id == champId);
+
+            const squatBox = document.getElementById('container-adm-squat');
+            const deadliftBox = document.getElementById('container-adm-deadlift');
+            const squatInput = document.getElementById('adm-r-squat');
+            const deadliftInput = document.getElementById('adm-r-deadlift');
+
+            if (champ && champ.type === 'benchpress') {
+                squatBox.classList.add('hidden');
+                deadliftBox.classList.add('hidden');
+                squatInput.removeAttribute('required');
+                deadliftInput.removeAttribute('required');
+                squatInput.value = '0';
+                deadliftInput.value = '0';
+            } else {
+                squatBox.classList.remove('hidden');
+                deadliftBox.classList.remove('hidden');
+                squatInput.setAttribute('required', 'required');
+                deadliftInput.setAttribute('required', 'required');
+            }
+            calculateTotalInAdmin();
         }
 
         function adjustWeightClassesInAdmin() {
@@ -641,8 +735,10 @@
             }
         }
 
+        // PRESERVE LIFTER DETAILS & FETCH EVERYTHING AUTOMATICALLY WHEN EDITING
         async function submitLifterResult(e) {
             e.preventDefault();
+            const result_id = document.getElementById('adm-r-id').value;
             const championship_id = document.getElementById('adm-r-champ-select').value;
             const lifter_id = document.getElementById('adm-r-lifter-select').value;
             const club = document.getElementById('adm-r-club').value.trim();
@@ -650,9 +746,13 @@
             const gender = document.getElementById('adm-r-gender').value;
             const age_category = document.getElementById('adm-r-age').value;
             const weight_category = document.getElementById('adm-r-weight').value;
-            const squat = parseFloat(document.getElementById('adm-r-squat').value) || 0;
+            
+            const champ = cachedChampionships.find(c => c.id == championship_id);
+            const isBenchOnly = champ && champ.type === 'benchpress';
+
+            const squat = isBenchOnly ? 0 : (parseFloat(document.getElementById('adm-r-squat').value) || 0);
             const bench = parseFloat(document.getElementById('adm-r-bench').value) || 0;
-            const deadlift = parseFloat(document.getElementById('adm-r-deadlift').value) || 0;
+            const deadlift = isBenchOnly ? 0 : (parseFloat(document.getElementById('adm-r-deadlift').value) || 0);
             const total = parseFloat(document.getElementById('adm-r-total').value) || 0;
 
             if (!championship_id || !lifter_id) {
@@ -660,17 +760,99 @@
                 return;
             }
 
+            // Save & Update Lifter profile details dynamically into the lifter's database record
             await _supabase.from('lifters').update({ club, birth_year, gender }).eq('id', lifter_id);
 
-            const { error } = await _supabase.from('results').insert([{
-                championship_id, lifter_id, age_category, weight_category, squat, bench, deadlift, total
-            }]);
+            const payload = { championship_id, lifter_id, age_category, weight_category, squat, bench, deadlift, total };
 
-            if (error) alert("فشل حفظ الرفعة: " + error.message);
-            else {
-                alert("تم تسجيل النتيجة وتنزيلها بجدول البطولة بنجاح!");
-                e.target.reset();
-                document.getElementById('adm-r-total').value = '';
+            let error;
+            if (result_id) {
+                const res = await _supabase.from('results').update(payload).eq('id', result_id);
+                error = res.error;
+            } else {
+                const res = await _supabase.from('results').insert([payload]);
+                error = res.error;
+            }
+
+            if (error) {
+                alert("فشل حفظ الرفعات والتغييرات: " + error.message);
+            } else {
+                alert(result_id ? "تم تعديل وحفظ أرقام ورفعات اللاعب بنجاح!" : "تم تسجيل النتيجة بنجاح!");
+                resetResultForm();
+                await fetchAllLiftersMap();
+                if (championship_id) openChampionshipDetails(championship_id);
+            }
+        }
+
+        function resetResultForm() {
+            document.getElementById('adm-r-id').value = '';
+            document.getElementById('adm-r-champ-select').value = '';
+            document.getElementById('adm-r-lifter-select').value = '';
+            document.getElementById('adm-r-club').value = '';
+            document.getElementById('adm-r-year').value = '';
+            document.getElementById('adm-r-squat').value = '';
+            document.getElementById('adm-r-bench').value = '';
+            document.getElementById('adm-r-deadlift').value = '';
+            document.getElementById('adm-r-total').value = '';
+            document.getElementById('adm-r-lifter-search').value = '';
+            document.getElementById('adm-r-form-title').innerText = '📊 4. تسجيل / تعديل أرقام لاعب داخل البطولة (IPF Score Sheet)';
+            document.getElementById('adm-r-submit-btn').innerText = 'تثبيت النتيجة بجدول البطولة';
+            document.getElementById('adm-r-btn-cancel').classList.add('hidden');
+            populateAdminLifterSelect();
+        }
+
+        // AUTOMATICALLY FETCH REGISTRATION DETAILS WHEN EDITING A LIFTER IN A CHAMPIONSHIP
+        async function prepareEditLifterResult(resultId) {
+            const isAdmin = localStorage.getItem('adminSessionActive') === 'true';
+            if (!isAdmin) return alert("⚠️ هذه العملية متاحة للمشرفين فقط.");
+
+            const { data: res, error } = await _supabase.from('results').select('*').eq('id', resultId).single();
+            if (error || !res) return alert("تعذر جلب بيانات الرفعة.");
+
+            switchTab('admin');
+
+            document.getElementById('adm-r-id').value = res.id;
+            document.getElementById('adm-r-champ-select').value = res.championship_id;
+            
+            await fetchAllLiftersMap();
+            populateAdminLifterSelect();
+            document.getElementById('adm-r-lifter-select').value = res.lifter_id;
+
+            const lifter = cachedLiftersMap[res.lifter_id] || {};
+            document.getElementById('adm-r-club').value = lifter.club || '';
+            document.getElementById('adm-r-year').value = lifter.birth_year || '';
+            document.getElementById('adm-r-gender').value = lifter.gender || 'رجال';
+
+            document.getElementById('adm-r-age').value = res.age_category || 'متقدمين';
+            adjustWeightClassesInAdmin();
+            document.getElementById('adm-r-weight').value = res.weight_category;
+
+            document.getElementById('adm-r-squat').value = res.squat || 0;
+            document.getElementById('adm-r-bench').value = res.bench || 0;
+            document.getElementById('adm-r-deadlift').value = res.deadlift || 0;
+            
+            handleAdminChampTypeChange();
+            calculateTotalInAdmin();
+
+            document.getElementById('adm-r-form-title').innerText = '✏️ 4. تعديل أرقام ورفعات اللاعب الرسمية';
+            document.getElementById('adm-r-submit-btn').innerText = 'حفظ وتحديث الأرقام المعدلة';
+            document.getElementById('adm-r-btn-cancel').classList.remove('hidden');
+
+            window.scrollTo({ top: document.getElementById('tab-admin').offsetTop - 20, behavior: 'smooth' });
+        }
+
+        async function removeLifterFromChampionshipOnly(resultId, champId) {
+            const isAdmin = localStorage.getItem('adminSessionActive') === 'true';
+            if (!isAdmin) return alert("⚠️ هذه العملية متاحة للمشرفين فقط.");
+
+            if (confirm("هل أنت متأكد من إلغاء مشاركة اللاعب من هذه البطولة فقط؟ (سيبقى اسمه محفوظاً بقاعدة البيانات)")) {
+                const { error } = await _supabase.from('results').delete().eq('id', resultId);
+                if (error) {
+                    alert("خطأ أثناء إلغاء المشاركة: " + error.message);
+                } else {
+                    alert("تم إزالة مشاركة اللاعب من البطولة بنجاح!");
+                    openChampionshipDetails(champId);
+                }
             }
         }
 
@@ -685,33 +867,87 @@
             }
         }
 
-        async function deleteSelectedLifter() {
-            const id = document.getElementById('adm-delete-lifter-select').value;
-            if (!id) return alert("اختر لاعباً للحذف!");
-            if (confirm("هل أنت متأكد من حذف هذا اللاعب وجميع سجله الرياضي؟")) {
-                await _supabase.from('results').delete().eq('lifter_id', id);
-                const { error } = await _supabase.from('lifters').delete().eq('id', id);
-                if (error) alert("خطأ بالحذف: " + error.message);
-                else { alert("تم حذف اللاعب بنجاح!"); loadAdminDataDropdowns(); }
-            }
+        function prepareEditChampionshipDirect(champId) {
+            switchTab('admin');
+            document.getElementById('adm-delete-champ-select').value = champId;
+            editSelectedChampionship();
         }
 
-        function calculateTotalInAdmin() {
-            const squat = parseFloat(document.getElementById('adm-r-squat').value) || 0;
-            const bench = parseFloat(document.getElementById('adm-r-bench').value) || 0;
-            const deadlift = parseFloat(document.getElementById('adm-r-deadlift').value) || 0;
-            document.getElementById('adm-r-total').value = squat + bench + deadlift;
+        function editSelectedChampionship() {
+            const id = document.getElementById('adm-delete-champ-select').value;
+            if (!id) return alert("يرجى اختيار بطولة لتعديلها أولاً!");
+
+            const champ = cachedChampionships.find(c => c.id == id);
+            if (!champ) return;
+
+            document.getElementById('adm-c-id').value = champ.id;
+            document.getElementById('adm-c-name').value = champ.name;
+            document.getElementById('adm-c-type').value = champ.type || 'powerlifting';
+            document.getElementById('adm-c-location').value = champ.location;
+            document.getElementById('adm-c-date').value = champ.date;
+
+            document.getElementById('adm-c-btn-submit').innerText = 'تحديث بيانات البطولة';
+            document.getElementById('adm-c-btn-cancel').classList.remove('hidden');
+
+            window.scrollTo({ top: document.getElementById('tab-admin').offsetTop - 20, behavior: 'smooth' });
+        }
+
+        function resetChampionshipForm() {
+            document.getElementById('adm-c-id').value = '';
+            document.getElementById('adm-c-name').value = '';
+            document.getElementById('adm-c-type').value = 'powerlifting';
+            document.getElementById('adm-c-location').value = '';
+            document.getElementById('adm-c-date').value = '';
+            document.getElementById('adm-c-btn-submit').innerText = 'حفظ البطولة';
+            document.getElementById('adm-c-btn-cancel').classList.add('hidden');
         }
 
         async function submitNewChampionship(e) {
             e.preventDefault();
+            const id = document.getElementById('adm-c-id').value;
             const name = document.getElementById('adm-c-name').value;
+            const type = document.getElementById('adm-c-type').value;
             const location = document.getElementById('adm-c-location').value;
             const date = document.getElementById('adm-c-date').value;
 
-            const { error } = await _supabase.from('championships').insert([{ name, location, date }]);
+            let error;
+            if (id) {
+                const res = await _supabase.from('championships').update({ name, type, location, date }).eq('id', id);
+                error = res.error;
+            } else {
+                const res = await _supabase.from('championships').insert([{ name, type, location, date }]);
+                error = res.error;
+            }
+
             if (error) alert("خطأ: " + error.message);
-            else { alert("تم حفظ البطولة!"); e.target.reset(); loadAdminDataDropdowns(); }
+            else { 
+                alert(id ? "تم تحديث بيانات البطولة بنجاح!" : "تم حفظ البطولة الجديدة!"); 
+                resetChampionshipForm(); 
+                loadAdminDataDropdowns(); 
+            }
+        }
+
+        async function deleteSelectedLifter() {
+            const id = document.getElementById('adm-delete-lifter-select').value;
+            if (!id) return alert("اختر لاعباً للحذف!");
+            if (confirm("تنبيه: هذا الخيار سيحذف اللاعب وسجله الكامل نهائياً من قاعدة البيانات! هل أنت متأكد؟")) {
+                await _supabase.from('results').delete().eq('lifter_id', id);
+                const { error } = await _supabase.from('lifters').delete().eq('id', id);
+                if (error) alert("خطأ بالحذف: " + error.message);
+                else { alert("تم حذف اللاعب نهائياً من السيستم!"); loadAdminDataDropdowns(); }
+            }
+        }
+
+        function calculateTotalInAdmin() {
+            const champId = document.getElementById('adm-r-champ-select').value;
+            const champ = cachedChampionships.find(c => c.id == champId);
+            const isBenchOnly = champ && champ.type === 'benchpress';
+
+            const squat = isBenchOnly ? 0 : (parseFloat(document.getElementById('adm-r-squat').value) || 0);
+            const bench = parseFloat(document.getElementById('adm-r-bench').value) || 0;
+            const deadlift = isBenchOnly ? 0 : (parseFloat(document.getElementById('adm-r-deadlift').value) || 0);
+
+            document.getElementById('adm-r-total').value = squat + bench + deadlift;
         }
 
         async function submitNewNews(e) {
@@ -838,7 +1074,6 @@
             openChampionshipDetails(champId);
         }
 
-        // OPEN MODAL WITH DIRECT REALTIME FETCH & DISPLAY AGE/WEIGHT CATEGORIES FOR EACH CHAMPIONSHIP
         async function openLifterModal(lifterId) {
             if (!lifterId) return;
 
@@ -854,7 +1089,6 @@
                 document.getElementById('m-lifter-club').innerText = lifter.club || 'مستقل';
                 document.getElementById('m-lifter-year').innerText = lifter.birth_year || '-';
 
-                // تعبئة نموذج التعديل بالبيانات الحالية
                 document.getElementById('edit-lifter-id').value = lifter.id;
                 document.getElementById('edit-lifter-name').value = lifter.name || '';
                 document.getElementById('edit-lifter-club').value = lifter.club || '';
@@ -862,7 +1096,6 @@
                 document.getElementById('edit-lifter-gender').value = lifter.gender || 'رجال';
                 document.getElementById('m-edit-lifter-form').classList.add('hidden');
 
-                // إظهار/إخفاء زر التعديل بحسب حالة الأدمن
                 const isAdmin = localStorage.getItem('adminSessionActive') === 'true';
                 document.getElementById('m-edit-lifter-btn').classList.toggle('hidden', !isAdmin);
 
@@ -877,7 +1110,6 @@
                     document.getElementById('m-lifter-deadlift').innerText = maxdeadlift + ' kg';
                     document.getElementById('m-lifter-total').innerText = maxtotal + ' kg';
 
-                    // عرض اسم البطولة كـ رابط عند الضغط عليه ينقلك لنتائج البطولة بالكامل
                     document.getElementById('m-lifter-history').innerHTML = results.map(r => `
                         <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 text-xs flex justify-between items-center gap-2">
                             <div>
@@ -908,6 +1140,9 @@
 
         async function saveLifterProfileEdits(e) {
             e.preventDefault();
+            const isAdmin = localStorage.getItem('adminSessionActive') === 'true';
+            if (!isAdmin) return alert("⚠️ هذه العملية متاحة للمشرفين فقط.");
+
             const id = document.getElementById('edit-lifter-id').value;
             const name = document.getElementById('edit-lifter-name').value.trim();
             const club = document.getElementById('edit-lifter-club').value.trim();
@@ -922,7 +1157,6 @@
                 alert("تم تحديث بيانات اللاعب بنجاح!");
                 await fetchAllLiftersMap();
                 openLifterModal(id);
-                // تحديث الواجهات الحالية إذا كانت مفتوحة
                 const activeHome = !document.getElementById('tab-home').classList.contains('hidden');
                 const activeLifters = !document.getElementById('tab-lifters').classList.contains('hidden');
                 if (activeHome) loadChampionshipsList();
@@ -967,9 +1201,8 @@
         function checkAdminSession() {
             const isActive = localStorage.getItem('adminSessionActive') === 'true';
             document.getElementById('auth-nav-btn').classList.toggle('hidden', isActive);
-            document.getElementById('admin-nav-btn').classList.toggle('hidden', !isActive);
+            document.getElementById('admin-nav-btn').classList.toggle('hidden', isActive);
             
-            // تحديث الزر في القائمة المتنقلة للموبايل
             const mobileAuthContainer = document.getElementById('mobile-auth-container');
             if (mobileAuthContainer) {
                 mobileAuthContainer.innerHTML = isActive 
