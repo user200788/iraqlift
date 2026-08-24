@@ -774,7 +774,7 @@
         const ADMIN_PASS = "123456";
 
         let isAdmin = false;
-        let currentUser = null; // المستخدم المسجل حالياً
+        let currentUser = null;
 
         let selectedComp = null;
         let currentResultAgeGroup = "Sub-Junior";
@@ -799,7 +799,7 @@
                     date: "2026-08-24"
                 }
             ],
-            users: [] // مصفوفة الحسابات المسجلة (لاعبين ومدربين)
+            users: []
         };
 
         const weightCategories = ["53 kg", "59 kg", "66 kg", "74 kg", "83 kg", "93 kg", "105 kg", "120 kg", "+120 kg"];
@@ -816,9 +816,21 @@
         });
 
         async function fetchCloudData() {
+            // المحاولة الأولى: الجلب من الذاكرة المحلية أولاً لسرعة العرض وعدم الاعتماد المطلق على الشبكة
+            const localData = localStorage.getItem('iq_powerlifting_db');
+            if(localData) {
+                try {
+                    db = JSON.parse(localData);
+                    renderAll();
+                } catch(e) {}
+            }
+
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                    headers: { "X-Access-Key": API_KEY }
+                    headers: { 
+                        "X-Master-Key": API_KEY,
+                        "X-Access-Key": API_KEY
+                    }
                 });
                 if(res.ok) {
                     const data = await res.json();
@@ -829,6 +841,7 @@
                         if(!db.events) db.events = [];
                         if(!db.news) db.news = [];
                         if(!db.users) db.users = [];
+                        localStorage.setItem('iq_powerlifting_db', JSON.stringify(db));
                     }
                     renderAll();
                 }
@@ -838,14 +851,23 @@
         }
 
         async function saveCloudData() {
+            // الحفظ المحلي المباشر لضمان عدم ضياع التغيرات إطلاقاً
+            localStorage.setItem('iq_powerlifting_db', JSON.stringify(db));
             renderAll();
+
             try {
                 await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                     method: "PUT",
-                    headers: { "Content-Type": "application/json", "X-Access-Key": API_KEY },
+                    headers: { 
+                        "Content-Type": "application/json", 
+                        "X-Master-Key": API_KEY,
+                        "X-Access-Key": API_KEY
+                    },
                     body: JSON.stringify(db)
                 });
-            } catch(e) {}
+            } catch(e) {
+                console.log("تنبيه: تعذر المزامنة السحابية المؤقتة، البيانات محفوظة في المتصفح محلياً.");
+            }
         }
 
         function toggleAdminLogin() {
@@ -870,7 +892,7 @@
             }
         }
 
-        /* إدارة حسابات المستخدمين (تسجيل دخول وإنشاء حساب) */
+        /* إدارة حسابات المستخدمين */
         function openAuthModal() {
             if(currentUser) {
                 if(confirm(`هل تريد تسجيل الخروج من حساب (${currentUser.fullname})؟`)) {
@@ -978,7 +1000,6 @@
             renderAdminUsersTable();
         }
 
-        // عرض جدول حسابات المسجلين للأدمن
         function renderAdminUsersTable() {
             const tbody = document.getElementById('admin-users-tbody');
             tbody.innerHTML = '';
@@ -1396,12 +1417,11 @@
             saveCloudData();
         }
 
-        /* البروفايل التفاعلي للاعب (Modal Player Profile) */
+        /* البروفايل التفاعلي للاعب */
         function openPlayerModal(playerName) {
             const modal = document.getElementById('player-modal');
             document.getElementById('modal-player-name').innerText = playerName;
 
-            // البحث إن كان هناك حساب مستخدم مطابق لهذا الاسم لعرض صورته وصفته
             const matchedUser = db.users.find(u => u.fullname === playerName);
             const avatarImg = document.getElementById('modal-player-avatar');
             if(matchedUser) {
@@ -1433,7 +1453,6 @@
             document.getElementById('pb-deadlift').innerText = `${maxDl} كغم`;
             document.getElementById('pb-total').innerText = `${maxTotal} كغم`;
 
-            // السجل
             const historyBody = document.getElementById('player-history-tbody');
             historyBody.innerHTML = '';
             playerResults.forEach(r => {
@@ -1451,7 +1470,6 @@
                 `;
             });
 
-            // الأرقام القياسية المسجلة باسمه
             const recordsBody = document.getElementById('player-records-tbody');
             recordsBody.innerHTML = '';
             const playerRecs = db.records.filter(r => r.holder === playerName);
