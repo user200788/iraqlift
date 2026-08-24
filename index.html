@@ -330,13 +330,49 @@
     <div id="lifter-profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex justify-center items-center p-4">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-5">
             <button onclick="closeLifterModal()" class="absolute top-4 left-4 text-gray-400 hover:text-white text-lg font-bold p-1">✕</button>
-            <div class="flex items-center gap-4 border-b border-gray-800 pb-4">
-                <div class="w-12 h-12 bg-brand-600 text-white font-black rounded-full flex items-center justify-center text-xl shadow shrink-0">🏋️</div>
-                <div>
-                    <h3 id="m-lifter-name" class="text-xl font-black text-white">---</h3>
-                    <p class="text-xs text-gray-400">آخر نادي: <span id="m-lifter-club" class="text-brand-400 font-bold">---</span> | الميلاد: <span id="m-lifter-year" class="text-white font-bold">---</span></p>
+            
+            <div class="flex items-center justify-between border-b border-gray-800 pb-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-brand-600 text-white font-black rounded-full flex items-center justify-center text-xl shadow shrink-0">🏋️</div>
+                    <div>
+                        <h3 id="m-lifter-name" class="text-xl font-black text-white">---</h3>
+                        <p class="text-xs text-gray-400">آخر نادي: <span id="m-lifter-club" class="text-brand-400 font-bold">---</span> | الميلاد: <span id="m-lifter-year" class="text-white font-bold">---</span></p>
+                    </div>
                 </div>
+                <button id="m-edit-lifter-btn" onclick="toggleEditLifterForm()" class="hidden bg-brand-600/20 hover:bg-brand-600 text-brand-400 hover:text-white border border-brand-500/30 px-3 py-1.5 rounded-lg text-xs font-bold transition">✏️ تعديل البيانات</button>
             </div>
+
+            <!-- نموذج تعديل معلومات اللاعب (للأدمن فقط) -->
+            <form id="m-edit-lifter-form" onsubmit="saveLifterProfileEdits(event)" class="hidden bg-gray-950 p-4 rounded-xl border border-brand-500/30 space-y-3">
+                <h4 class="text-xs font-extrabold text-brand-400 uppercase">تعديل معلومات اللاعب الحالية</h4>
+                <input type="hidden" id="edit-lifter-id">
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-300 mb-1">اسم اللاعب الثلاثي</label>
+                    <input type="text" id="edit-lifter-name" class="form-input-custom" required>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-300 mb-1">النادي</label>
+                        <input type="text" id="edit-lifter-club" class="form-input-custom">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-300 mb-1">الميلاد</label>
+                        <input type="number" id="edit-lifter-year" min="1950" max="2020" class="form-input-custom">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-300 mb-1">الجنس</label>
+                        <select id="edit-lifter-gender" class="form-input-custom">
+                            <option value="رجال">رجال</option>
+                            <option value="سيدات">سيدات</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex gap-2 pt-1">
+                    <button type="submit" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold py-2 rounded-lg transition">حفظ التغييرات</button>
+                    <button type="button" onclick="toggleEditLifterForm()" class="bg-gray-800 text-gray-300 text-xs font-bold px-3 py-2 rounded-lg">إلغاء</button>
+                </div>
+            </form>
+
             <div>
                 <h4 class="text-xs font-extrabold text-gray-300 uppercase mb-2">الأرقام الشخصية المعتمدة (PB)</h4>
                 <div class="grid grid-cols-4 gap-2 text-center text-xs">
@@ -818,6 +854,18 @@
                 document.getElementById('m-lifter-club').innerText = lifter.club || 'مستقل';
                 document.getElementById('m-lifter-year').innerText = lifter.birth_year || '-';
 
+                // تعبئة نموذج التعديل بالبيانات الحالية
+                document.getElementById('edit-lifter-id').value = lifter.id;
+                document.getElementById('edit-lifter-name').value = lifter.name || '';
+                document.getElementById('edit-lifter-club').value = lifter.club || '';
+                document.getElementById('edit-lifter-year').value = lifter.birth_year || '';
+                document.getElementById('edit-lifter-gender').value = lifter.gender || 'رجال';
+                document.getElementById('m-edit-lifter-form').classList.add('hidden');
+
+                // إظهار/إخفاء زر التعديل بحسب حالة الأدمن
+                const isAdmin = localStorage.getItem('adminSessionActive') === 'true';
+                document.getElementById('m-edit-lifter-btn').classList.toggle('hidden', !isAdmin);
+
                 if (results && results.length > 0) {
                     const maxsquat = Math.max(...results.map(r => r.squat || 0));
                     const maxbench = Math.max(...results.map(r => r.bench || 0));
@@ -850,6 +898,35 @@
                 }
 
                 document.getElementById('lifter-profile-modal').classList.remove('hidden');
+            }
+        }
+
+        function toggleEditLifterForm() {
+            const form = document.getElementById('m-edit-lifter-form');
+            form.classList.toggle('hidden');
+        }
+
+        async function saveLifterProfileEdits(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-lifter-id').value;
+            const name = document.getElementById('edit-lifter-name').value.trim();
+            const club = document.getElementById('edit-lifter-club').value.trim();
+            const birth_year = parseInt(document.getElementById('edit-lifter-year').value) || null;
+            const gender = document.getElementById('edit-lifter-gender').value;
+
+            const { error } = await _supabase.from('lifters').update({ name, club, birth_year, gender }).eq('id', id);
+
+            if (error) {
+                alert("خطأ أثناء تحديث بيانات اللاعب: " + error.message);
+            } else {
+                alert("تم تحديث بيانات اللاعب بنجاح!");
+                await fetchAllLiftersMap();
+                openLifterModal(id);
+                // تحديث الواجهات الحالية إذا كانت مفتوحة
+                const activeHome = !document.getElementById('tab-home').classList.contains('hidden');
+                const activeLifters = !document.getElementById('tab-lifters').classList.contains('hidden');
+                if (activeHome) loadChampionshipsList();
+                if (activeLifters) loadLiftersDirectoryData();
             }
         }
 
