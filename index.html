@@ -1,8 +1,9 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أرشيف البورلفتنج العراقي - IPF</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -49,12 +50,10 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- HEADER -->
     <header class="sticky top-0 z-50 bg-[#0f172a]/95 backdrop-blur border-b border-gray-800 shadow-2xl">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 
-                <!-- Logo -->
                 <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
                     <div class="bg-gradient-to-tr from-brand-700 to-brand-500 p-2.5 rounded-xl shadow-lg shadow-brand-900/40">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6h18M3 12h18M3 18h18M5 6v12M19 6v12M9 6v12M15 6v12"></path></svg>
@@ -65,7 +64,6 @@
                     </div>
                 </div>
 
-                <!-- Desktop Navigation -->
                 <nav class="hidden md:flex items-center space-x-1 space-x-reverse font-bold text-sm">
                     <button onclick="switchTab('home')" id="nav-home" class="px-4 py-2.5 rounded-lg text-white bg-brand-600/10">🏆 البطولات والنتائج</button>
                     <button onclick="switchTab('records')" id="nav-records" class="px-4 py-2.5 rounded-lg text-gray-400 hover:text-brand-500">🥇 الأرقام القياسية</button>
@@ -82,7 +80,6 @@
                         <button onclick="logoutAdmin()" class="bg-gray-800 hover:bg-red-900/50 text-red-400 border border-red-900/30 px-3 py-2 rounded-lg text-xs font-bold">خروج</button>
                     </div>
 
-                    <!-- Mobile Menu Button (زر القائمة للهواتف) -->
                     <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg bg-gray-800 text-gray-200 hover:text-white border border-gray-700 focus:outline-none">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
@@ -90,13 +87,12 @@
 
             </div>
 
-            <!-- Mobile Navigation Dropdown (قائمة الهواتف الذكية) -->
             <div id="mobile-menu" class="hidden md:hidden border-t border-gray-800 py-4 space-y-2 font-bold text-sm bg-[#0f172a]">
                 <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-right px-4 py-2 text-white hover:bg-gray-800 rounded-lg">🏆 البطولات والنتائج</button>
                 <button onclick="switchTab('records'); toggleMobileMenu();" class="block w-full text-right px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">🥇 الأرقام القياسية</button>
                 <button onclick="switchTab('lifters'); toggleMobileMenu();" class="block w-full text-right px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">🏋️‍♂️ دليل اللاعبين</button>
                 <button onclick="switchTab('news'); toggleMobileMenu();" class="block w-full text-right px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">📢 الأخبار</button>
-                <div class="pt-2 border-t border-gray-800 px-4">
+                <div class="pt-2 border-t border-gray-800 px-4" id="mobile-auth-container">
                     <button onclick="switchTab('login'); toggleMobileMenu();" class="w-full bg-gray-800 text-gray-200 border border-gray-700 py-2 rounded-lg text-xs font-bold">🔐 دخول المشرف</button>
                 </div>
             </div>
@@ -104,10 +100,8 @@
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
     <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
 
-        <!-- TAB 1: HOME (CHAMPIONSHIPS LIST & VIEW ON CLICK) -->
         <section id="tab-home" class="space-y-8 fade-in">
             <div id="championships-list-view" class="space-y-6">
                 <div class="bg-gradient-to-r from-gray-900 via-[#131b2e] to-gray-900 border border-gray-800 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -126,7 +120,6 @@
                 </div>
             </div>
 
-            <!-- DETAILED CHAMPIONSHIP VIEW -->
             <div id="championship-detail-view" class="hidden space-y-8">
                 <button onclick="backToChampionshipsList()" class="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition">
                     ← الرجوع إلى قائمة البطولات
@@ -134,7 +127,6 @@
 
                 <div id="single-champ-header" class="bg-gray-900 border border-gray-800 p-6 rounded-2xl shadow-xl"></div>
 
-                <!-- Sticky Jump Links -->
                 <div class="sticky top-20 z-40 bg-[#0f172a]/95 backdrop-blur border-y border-gray-800 py-3 px-4 flex items-center gap-2 overflow-x-auto">
                     <span class="text-xs font-bold text-gray-400 shrink-0">⚡ الانتقال السريع:</span>
                     <a href="#champ-sec--53" class="px-3 py-1 bg-gray-800 hover:bg-brand-600 text-white rounded-lg text-xs font-bold shrink-0">53 kg (ناشئين/شباب)</a>
@@ -152,7 +144,6 @@
             </div>
         </section>
 
-        <!-- TAB 2: RECORDS -->
         <section id="tab-records" class="hidden space-y-8 fade-in">
             <div class="border-b border-gray-800 pb-5">
                 <h2 class="text-2xl font-black text-white">🥇 الأرقام القياسية العراقية (IPF Records)</h2>
@@ -166,7 +157,6 @@
             <div id="records-results-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </section>
 
-        <!-- TAB 3: LIFTERS DIRECTORY -->
         <section id="tab-lifters" class="hidden space-y-6 fade-in">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-800 pb-5">
                 <div>
@@ -180,7 +170,6 @@
             <div id="lifters-directory-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
 
-        <!-- TAB 4: NEWS -->
         <section id="tab-news" class="hidden space-y-6 fade-in">
             <div class="border-b border-gray-800 pb-5">
                 <h2 class="text-2xl font-black text-white">📢 الأخبار والإعلانات</h2>
@@ -188,7 +177,6 @@
             <div id="news-feed-container" class="space-y-4"></div>
         </section>
 
-        <!-- TAB 5: LOGIN -->
         <section id="tab-login" class="hidden max-w-md mx-auto my-12 fade-in">
             <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl space-y-4">
                 <h3 class="text-xl font-bold text-white text-center">تسجيل دخول المشرف</h3>
@@ -202,14 +190,13 @@
             </div>
         </section>
 
-        <!-- TAB 6: ADMIN DASHBOARD -->
         <section id="tab-admin" class="hidden space-y-8 fade-in">
-            <div class="border-b border-gray-800 pb-5">
+            <div class="border-b border-gray-800 pb-5 flex justify-between items-center">
                 <h2 class="text-2xl font-black text-white">⚙️ لوحة التحكم والإدارة الرسمية</h2>
+                <span class="px-3 py-1 bg-green-500/10 border border-green-500/30 text-green-400 text-xs font-bold rounded-full">جلسة آدمن نشطة</span>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- 1. إضافة بطولة -->
                 <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl space-y-4">
                     <h3 class="text-base font-bold text-white border-b border-gray-800 pb-2">🏆 1. إضافة بطولة جديدة</h3>
                     <form onsubmit="submitNewChampionship(event)" class="space-y-3">
@@ -220,24 +207,15 @@
                     </form>
                 </div>
 
-                <!-- 2. إضافة لاعب -->
                 <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl space-y-4">
-                    <h3 class="text-base font-bold text-white border-b border-gray-800 pb-2">👤 2. تسجيل لاعب جديد</h3>
+                    <h3 class="text-base font-bold text-white border-b border-gray-800 pb-2">👤 2. تسجيل اسم لاعب بالسيستم</h3>
                     <form onsubmit="submitNewLifter(event)" class="space-y-3">
                         <input type="text" id="adm-l-name" placeholder="اسم اللاعب الثلاثي" class="form-input-custom" required>
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="number" id="adm-l-year" min="1950" max="2020" placeholder="سنة الميلاد" class="form-input-custom" required>
-                            <select id="adm-l-gender" class="form-input-custom">
-                                <option value="رجال">رجال</option>
-                                <option value="سيدات">سيدات</option>
-                            </select>
-                        </div>
-                        <input type="text" id="adm-l-club" placeholder="النادي / المحافظة" class="form-input-custom" required>
-                        <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 rounded-lg text-xs">حفظ اللاعب</button>
+                        <p class="text-[11px] text-gray-400">سيتم تحديد (النادي، سنة الميلاد، الفئة) لاحقاً أثناء تسجيله داخل البطولة.</p>
+                        <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 rounded-lg text-xs">حفظ الاسم فقط</button>
                     </form>
                 </div>
 
-                <!-- 3. إضافة خبر -->
                 <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl space-y-4">
                     <h3 class="text-base font-bold text-white border-b border-gray-800 pb-2">📢 3. نشر خبر جديد</h3>
                     <form onsubmit="submitNewNews(event)" class="space-y-3">
@@ -247,14 +225,13 @@
                     </form>
                 </div>
 
-                <!-- 4. تسجيل رفعة لاعب في بطولة -->
                 <div class="lg:col-span-3 bg-gray-900 border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
                     <div class="border-b border-gray-800 pb-3">
-                        <h3 class="text-xl font-black text-white">📊 4. تسجيل نتائج رفعة لاعب بالبطولة (IPF Score Sheet)</h3>
+                        <h3 class="text-xl font-black text-white">📊 4. تسجيل لاعب ونتائجه داخل البطولة (IPF Score Sheet)</h3>
                     </div>
 
                     <form onsubmit="submitLifterResult(event)" class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
                                 <label class="block text-xs font-bold text-gray-300 mb-1">البطولة *</label>
                                 <select id="adm-r-champ-select" class="form-input-custom text-brand-400 font-bold" required></select>
@@ -263,6 +240,24 @@
                             <div>
                                 <label class="block text-xs font-bold text-gray-300 mb-1">اللاعب *</label>
                                 <select id="adm-r-lifter-select" class="form-input-custom text-white font-bold" required></select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-300 mb-1">النادي / المحافظة (بهذه البطولة) *</label>
+                                <input type="text" id="adm-r-club" placeholder="مثال: نادي الشرطة / أربيل" class="form-input-custom" required>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-300 mb-1">سنة الميلاد *</label>
+                                <input type="number" id="adm-r-year" min="1950" max="2020" placeholder="مثال: 2001" class="form-input-custom" required>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-300 mb-1">الجنس *</label>
+                                <select id="adm-r-gender" class="form-input-custom">
+                                    <option value="رجال">رجال</option>
+                                    <option value="سيدات">سيدات</option>
+                                </select>
                             </div>
 
                             <div>
@@ -309,9 +304,7 @@
                     </form>
                 </div>
 
-                <!-- 5. قسم الحذف والإدارة السريعة -->
                 <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
-                    <!-- حذف بطولات -->
                     <div class="bg-gray-900 border border-red-900/30 rounded-2xl p-6 shadow-xl space-y-4">
                         <h3 class="text-base font-bold text-red-400 border-b border-gray-800 pb-2">🗑️ حذف بطولة من النظام</h3>
                         <div class="space-y-3">
@@ -320,7 +313,6 @@
                         </div>
                     </div>
 
-                    <!-- حذف لاعبين -->
                     <div class="bg-gray-900 border border-red-900/30 rounded-2xl p-6 shadow-xl space-y-4">
                         <h3 class="text-base font-bold text-red-400 border-b border-gray-800 pb-2">🗑️ حذف لاعب من النظام</h3>
                         <div class="space-y-3">
@@ -335,7 +327,6 @@
 
     </main>
 
-    <!-- MODAL LIFTER PROFILE (معلومات شخصية وتحديث فوري) -->
     <div id="lifter-profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex justify-center items-center p-4">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-5">
             <button onclick="closeLifterModal()" class="absolute top-4 left-4 text-gray-400 hover:text-white text-lg font-bold p-1">✕</button>
@@ -343,7 +334,7 @@
                 <div class="w-12 h-12 bg-brand-600 text-white font-black rounded-full flex items-center justify-center text-xl shadow shrink-0">🏋️</div>
                 <div>
                     <h3 id="m-lifter-name" class="text-xl font-black text-white">---</h3>
-                    <p class="text-xs text-gray-400">النادي: <span id="m-lifter-club" class="text-brand-400 font-bold">---</span> | الميلاد: <span id="m-lifter-year" class="text-white font-bold">---</span></p>
+                    <p class="text-xs text-gray-400">آخر نادي: <span id="m-lifter-club" class="text-brand-400 font-bold">---</span> | الميلاد: <span id="m-lifter-year" class="text-white font-bold">---</span></p>
                 </div>
             </div>
             <div>
@@ -356,8 +347,8 @@
                 </div>
             </div>
             <div>
-                <h4 class="text-xs font-extrabold text-gray-300 uppercase mb-2">سجل المشاركات الرسمية</h4>
-                <div id="m-lifter-history" class="max-h-48 overflow-y-auto space-y-2 pr-1"></div>
+                <h4 class="text-xs font-extrabold text-gray-300 uppercase mb-2">سجل المشاركات الرسمية والفئات</h4>
+                <div id="m-lifter-history" class="max-h-56 overflow-y-auto space-y-2 pr-1"></div>
             </div>
         </div>
     </div>
@@ -366,7 +357,6 @@
         جميع الحقوق محفوظة © الاتحاد العراقي للبورلفتنج - IPF System
     </footer>
 
-    <!-- JS ENGINE -->
     <script>
         const SUPABASE_URL = 'https://hoadesmkvhwupacygabl.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_6POAmTjZGNfuk76lXw5Usw__kC_HVQ2';
@@ -377,7 +367,6 @@
         let cachedLiftersMap = {};
         let currentRecordAge = 'متقدمين';
 
-        // Toggle Mobile Navigation Menu
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
@@ -391,6 +380,15 @@
         }
 
         function switchTab(tabId) {
+            // حماية لوحة التحكم: التوجيه لصفحة التسجيل إذا لم يكن المشرف مسجلاً
+            if (tabId === 'admin') {
+                const isAdmin = localStorage.getItem('adminSessionActive') === 'true';
+                if (!isAdmin) {
+                    alert("⚠️ هذه المنطقة مخصصة لإدارة الاتحاد فقط. يرجى تسجيل الدخول بكود المشرف أولاً.");
+                    tabId = 'login';
+                }
+            }
+
             ['home', 'records', 'lifters', 'news', 'login', 'admin'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if (el) el.classList.add('hidden');
@@ -457,6 +455,11 @@
         async function openChampionshipDetails(champId) {
             document.getElementById('championships-list-view').classList.add('hidden');
             document.getElementById('championship-detail-view').classList.remove('hidden');
+
+            if (!cachedChampionships || cachedChampionships.length === 0) {
+                const { data: champs } = await _supabase.from('championships').select('*');
+                if (champs) cachedChampionships = champs;
+            }
 
             const champ = cachedChampionships.find(c => c.id == champId);
             const headerContainer = document.getElementById('single-champ-header');
@@ -569,11 +572,11 @@
                 if (deleteChampSelect) deleteChampSelect.innerHTML = champOptions;
             }
 
-            const lifters = await fetchAllLiftersMap();
+            await fetchAllLiftersMap();
             const sortedLifters = Object.values(cachedLiftersMap).sort((a, b) => a.name.localeCompare(b.name, 'ar'));
 
             if (sortedLifters) {
-                const lifterOptions = '<option value="">-- اختر اللاعب --</option>' + sortedLifters.map(l => `<option value="${l.id}">${l.name} (${l.club || 'مستقل'})</option>`).join('');
+                const lifterOptions = '<option value="">-- اختر اللاعب --</option>' + sortedLifters.map(l => `<option value="${l.id}">${l.name}</option>`).join('');
                 if (lifterSelect) lifterSelect.innerHTML = lifterOptions;
                 if (deleteLifterSelect) deleteLifterSelect.innerHTML = lifterOptions;
             }
@@ -590,16 +593,13 @@
         async function submitNewLifter(e) {
             e.preventDefault();
             const name = document.getElementById('adm-l-name').value.trim();
-            const birth_year = parseInt(document.getElementById('adm-l-year').value);
-            const gender = document.getElementById('adm-l-gender').value;
-            const club = document.getElementById('adm-l-club').value.trim();
 
-            const { error } = await _supabase.from('lifters').insert([{ name, birth_year, gender, club }]);
+            const { error } = await _supabase.from('lifters').insert([{ name }]);
 
             if (error) {
                 alert("خطأ أثناء حفظ اللاعب: " + error.message);
             } else {
-                alert(`تم حفظ اللاعب (${name}) بنجاح!`);
+                alert(`تم حفظ اسم اللاعب (${name}) بنجاح! يمكنك الآن تسجيله بالبطولات.`);
                 e.target.reset();
                 await loadAdminDataDropdowns();
             }
@@ -609,6 +609,9 @@
             e.preventDefault();
             const championship_id = document.getElementById('adm-r-champ-select').value;
             const lifter_id = document.getElementById('adm-r-lifter-select').value;
+            const club = document.getElementById('adm-r-club').value.trim();
+            const birth_year = parseInt(document.getElementById('adm-r-year').value);
+            const gender = document.getElementById('adm-r-gender').value;
             const age_category = document.getElementById('adm-r-age').value;
             const weight_category = document.getElementById('adm-r-weight').value;
             const squat = parseFloat(document.getElementById('adm-r-squat').value) || 0;
@@ -621,19 +624,20 @@
                 return;
             }
 
+            await _supabase.from('lifters').update({ club, birth_year, gender }).eq('id', lifter_id);
+
             const { error } = await _supabase.from('results').insert([{
                 championship_id, lifter_id, age_category, weight_category, squat, bench, deadlift, total
             }]);
 
             if (error) alert("فشل حفظ الرفعة: " + error.message);
             else {
-                alert("تم تسجيل النتيجة وتنزيلها بالجدول بنجاح!");
+                alert("تم تسجيل النتيجة وتنزيلها بجدول البطولة بنجاح!");
                 e.target.reset();
                 document.getElementById('adm-r-total').value = '';
             }
         }
 
-        // DELETE FUNCTIONS
         async function deleteSelectedChampionship() {
             const id = document.getElementById('adm-delete-champ-select').value;
             if (!id) return alert("اختر بطولة للحذف!");
@@ -717,7 +721,17 @@
                     topTotal = data.reduce((max, r) => (r.total > (max?.total || 0) ? r : max), null);
                 }
 
-                const getName = (res) => res ? (cachedLiftersMap[res.lifter_id]?.name || 'لاعب مسجل') : 'غير مسجل';
+                const renderRecordPlayer = (res, val) => {
+                    if (!res || !res.lifter_id) return `<span class="text-gray-400 font-bold truncate mt-1 block">غير مسجل</span>`;
+                    const name = cachedLiftersMap[res.lifter_id]?.name || 'لاعب مسجل';
+                    return `<p onclick="openLifterModal('${res.lifter_id}')" class="text-brand-400 font-bold truncate mt-1 hover:underline cursor-pointer transition">${name}</p>`;
+                };
+
+                const renderTotalPlayer = (res) => {
+                    if (!res || !res.lifter_id) return `<span class="text-white font-bold truncate mt-1 block">غير مسجل</span>`;
+                    const name = cachedLiftersMap[res.lifter_id]?.name || 'لاعب مسجل';
+                    return `<p onclick="openLifterModal('${res.lifter_id}')" class="text-white font-bold truncate mt-1 hover:underline cursor-pointer transition">${name}</p>`;
+                };
 
                 html += `
                     <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-lg space-y-4">
@@ -729,22 +743,22 @@
                             <div class="bg-gray-950 p-3 rounded-xl border border-gray-800">
                                 <span class="text-gray-400 block font-bold mb-1">Squat Record</span>
                                 <span class="text-lg font-black text-white">${topSquat?.squat || 0} kg</span>
-                                <p class="text-brand-400 font-bold truncate mt-1">${getName(topSquat)}</p>
+                                ${renderRecordPlayer(topSquat)}
                             </div>
                             <div class="bg-gray-950 p-3 rounded-xl border border-gray-800">
                                 <span class="text-gray-400 block font-bold mb-1">Bench Record</span>
                                 <span class="text-lg font-black text-white">${topBench?.bench || 0} kg</span>
-                                <p class="text-brand-400 font-bold truncate mt-1">${getName(topBench)}</p>
+                                ${renderRecordPlayer(topBench)}
                             </div>
                             <div class="bg-gray-950 p-3 rounded-xl border border-gray-800">
                                 <span class="text-gray-400 block font-bold mb-1">Deadlift Record</span>
                                 <span class="text-lg font-black text-white">${topDead?.deadlift || 0} kg</span>
-                                <p class="text-brand-400 font-bold truncate mt-1">${getName(topDead)}</p>
+                                ${renderRecordPlayer(topDead)}
                             </div>
                             <div class="bg-brand-500/10 p-3 rounded-xl border border-brand-500/30">
                                 <span class="text-brand-400 block font-bold mb-1">Total Record</span>
                                 <span class="text-lg font-black text-brand-400">${topTotal?.total || 0} kg</span>
-                                <p class="text-white font-bold truncate mt-1">${getName(topTotal)}</p>
+                                ${renderTotalPlayer(topTotal)}
                             </div>
                         </div>
                     </div>
@@ -782,13 +796,22 @@
             renderLiftersGrid(filtered);
         }
 
-        // OPEN MODAL WITH DIRECT REALTIME FETCH FOR LIFTER DATA (اصلاح تفاصيل اللاعب بالكامل)
+        function openChampionshipDetailsFromModal(champId) {
+            closeLifterModal();
+            switchTab('home');
+            openChampionshipDetails(champId);
+        }
+
+        // OPEN MODAL WITH DIRECT REALTIME FETCH & DISPLAY AGE/WEIGHT CATEGORIES FOR EACH CHAMPIONSHIP
         async function openLifterModal(lifterId) {
             if (!lifterId) return;
 
-            // Direct fetch of the specific lifter info from database
-            const { data: lifter, error: lErr } = await _supabase.from('lifters').select('*').eq('id', lifterId).maybeSingle();
-            const { data: results, error: rErr } = await _supabase.from('results').select('*, championships(name)').eq('lifter_id', lifterId);
+            const { data: lifter } = await _supabase.from('lifters').select('*').eq('id', lifterId).maybeSingle();
+            const { data: results } = await _supabase.from('results').select('*').eq('lifter_id', lifterId);
+            const { data: champs } = await _supabase.from('championships').select('*');
+            
+            const champsMap = {};
+            if (champs) champs.forEach(c => { champsMap[c.id] = c.name; });
 
             if (lifter) {
                 document.getElementById('m-lifter-name').innerText = lifter.name || '---';
@@ -796,20 +819,26 @@
                 document.getElementById('m-lifter-year').innerText = lifter.birth_year || '-';
 
                 if (results && results.length > 0) {
-                    const maxSquat = Math.max(...results.map(r => r.squat || 0));
-                    const maxBench = Math.max(...results.map(r => r.bench || 0));
-                    const maxDead = Math.max(...results.map(r => r.deadlift || 0));
-                    const maxTotal = Math.max(...results.map(r => r.total || 0));
+                    const maxsquat = Math.max(...results.map(r => r.squat || 0));
+                    const maxbench = Math.max(...results.map(r => r.bench || 0));
+                    const maxdeadlift = Math.max(...results.map(r => r.deadlift || 0));
+                    const maxtotal = Math.max(...results.map(r => r.total || 0));
 
-                    document.getElementById('m-lifter-squat').innerText = maxSquat + ' kg';
-                    document.getElementById('m-lifter-bench').innerText = maxBench + ' kg';
-                    document.getElementById('m-lifter-deadlift').innerText = maxDead + ' kg';
-                    document.getElementById('m-lifter-total').innerText = maxTotal + ' kg';
+                    document.getElementById('m-lifter-squat').innerText = maxsquat + ' kg';
+                    document.getElementById('m-lifter-bench').innerText = maxbench + ' kg';
+                    document.getElementById('m-lifter-deadlift').innerText = maxdeadlift + ' kg';
+                    document.getElementById('m-lifter-total').innerText = maxtotal + ' kg';
 
+                    // عرض اسم البطولة كـ رابط عند الضغط عليه ينقلك لنتائج البطولة بالكامل
                     document.getElementById('m-lifter-history').innerHTML = results.map(r => `
-                        <div class="bg-gray-950 p-2.5 rounded-xl border border-gray-800 text-xs flex justify-between items-center">
-                            <span class="font-bold text-gray-300">${r.championships?.name || 'بطولة رسمية'} (${r.weight_category} kg)</span>
-                            <span class="font-black text-brand-400 text-sm">${r.total} kg</span>
+                        <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 text-xs flex justify-between items-center gap-2">
+                            <div>
+                                <span onclick="openChampionshipDetailsFromModal('${r.championship_id}')" class="font-bold text-gray-200 hover:text-brand-400 cursor-pointer underline transition block">
+                                    ${champsMap[r.championship_id] || 'بطولة رسمية'} ➔
+                                </span>
+                                <span class="text-[11px] text-gray-400 font-semibold">فئة: ${r.age_category || 'متقدمين'} | وزن: ${r.weight_category} kg</span>
+                            </div>
+                            <span class="font-black text-brand-400 text-sm shrink-0 bg-brand-500/10 border border-brand-500/20 px-2 py-1 rounded-lg">${r.total} kg</span>
                         </div>
                     `).join('');
                 } else {
@@ -862,6 +891,15 @@
             const isActive = localStorage.getItem('adminSessionActive') === 'true';
             document.getElementById('auth-nav-btn').classList.toggle('hidden', isActive);
             document.getElementById('admin-nav-btn').classList.toggle('hidden', !isActive);
+            
+            // تحديث الزر في القائمة المتنقلة للموبايل
+            const mobileAuthContainer = document.getElementById('mobile-auth-container');
+            if (mobileAuthContainer) {
+                mobileAuthContainer.innerHTML = isActive 
+                    ? `<button onclick="switchTab('admin'); toggleMobileMenu();" class="w-full bg-brand-600 text-white py-2 rounded-lg text-xs font-bold mb-2">⚙️ لوحة التحكم</button>
+                       <button onclick="logoutAdmin(); toggleMobileMenu();" class="w-full bg-red-900/50 text-red-400 py-2 rounded-lg text-xs font-bold">خروج</button>`
+                    : `<button onclick="switchTab('login'); toggleMobileMenu();" class="w-full bg-gray-800 text-gray-200 border border-gray-700 py-2 rounded-lg text-xs font-bold">🔐 دخول المشرف</button>`;
+            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
