@@ -72,22 +72,19 @@
                 </nav>
 
                 <div class="flex items-center gap-3">
-                    <div id="auth-nav-btn" class="hidden md:block">
-                        <button onclick="selectQuickIcon('login')" class="bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 px-4 py-2 rounded-lg text-xs font-bold">دخول المشرف</button>
-                    </div>
                     <div id="admin-nav-btn" class="hidden md:flex items-center gap-2">
                         <button onclick="selectQuickIcon('admin')" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow">لوحة التحكم</button>
                         <button onclick="logoutAdmin()" class="bg-gray-800 hover:bg-red-900/50 text-red-400 border border-red-900/30 px-3 py-2 rounded-lg text-xs font-bold">خروج</button>
                     </div>
 
-                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg bg-gray-800 text-gray-200 hover:text-white border border-gray-700 focus:outline-none">
+                    <button onclick="toggleMobileMenu()" class="p-2 rounded-lg bg-gray-800 text-gray-200 hover:text-white border border-gray-700 focus:outline-none">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
                 </div>
 
             </div>
 
-            <div id="mobile-menu" class="hidden md:hidden border-t border-gray-800 py-4 space-y-2 font-bold text-sm bg-[#0f172a]">
+            <div id="mobile-menu" class="hidden border-t border-gray-800 py-4 space-y-2 font-bold text-sm bg-[#0f172a]">
                 <button onclick="selectQuickIcon('home'); toggleMobileMenu();" class="block w-full text-right px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">البطولات والنتائج</button>
                 <button onclick="selectQuickIcon('records'); toggleMobileMenu();" class="block w-full text-right px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">الأرقام القياسية</button>
                 <button onclick="selectQuickIcon('lifters'); toggleMobileMenu();" class="block w-full text-right px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg">دليل اللاعبين</button>
@@ -1459,8 +1456,7 @@
 
         function checkAdminSession() {
             const isActive = localStorage.getItem('adminSessionActive') === 'true';
-            document.getElementById('auth-nav-btn').classList.toggle('hidden', isActive);
-            document.getElementById('admin-nav-btn').classList.toggle('hidden', isActive);
+            document.getElementById('admin-nav-btn').classList.toggle('hidden', !isActive);
             
             const mobileAuthContainer = document.getElementById('mobile-auth-container');
             if (mobileAuthContainer) {
