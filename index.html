@@ -489,21 +489,35 @@
         let cachedLiftersMap = {};
         let currentRecordAge = 'متقدمين';
 
-        // صور المعرض التفاعلي السريعة
-        let slidesData = JSON.parse(localStorage.getItem('appSlidesData')) || [
-            { id: '1', title: 'البطولة الوطنية للبورلفتنج', desc: 'تغطية رسمية لأقوى المنافسات والأرقام العالية', url: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1200' },
-            { id: '2', title: 'تحطيم الأرقام القياسية العراقية', desc: 'متابعة مباشرة للإحصائيات والنتائج المعتمدة من الاتحاد', url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1200' }
-        ];
+        // صور المعرض التفاعلي السريعة - جلب مباشر من سوبابيس
+        let slidesData = [];
         let currentSlideIndex = 0;
 
+        async function fetchSlidesData() {
+            const { data, error } = await _supabase.from('slides').select('*');
+            if (!error && data) {
+                slidesData = data;
+                if (currentSlideIndex >= slidesData.length) currentSlideIndex = 0;
+                updateSliderView();
+                renderAdminSlidesList();
+            }
+        }
+
         function updateSliderView() {
-            if (!slidesData || slidesData.length === 0) return;
-            const item = slidesData[currentSlideIndex];
             const holder = document.getElementById('slider-image-holder');
             const title = document.getElementById('slider-title');
             const desc = document.getElementById('slider-desc');
             const dots = document.getElementById('slider-dots');
 
+            if (!slidesData || slidesData.length === 0) {
+                if (holder) holder.style.backgroundImage = 'none';
+                if (title) title.innerText = 'لا توجد صور منشورة حالياً';
+                if (desc) desc.innerText = '';
+                if (dots) dots.innerHTML = '';
+                return;
+            }
+
+            const item = slidesData[currentSlideIndex];
             if (holder) holder.style.backgroundImage = `url('${item.url}')`;
             if (title) title.innerText = item.title || '';
             if (desc) desc.innerText = item.desc || '';
@@ -516,11 +530,13 @@
         }
 
         function nextSlide() {
+            if (!slidesData || slidesData.length === 0) return;
             currentSlideIndex = (currentSlideIndex + 1) % slidesData.length;
             updateSliderView();
         }
 
         function prevSlide() {
+            if (!slidesData || slidesData.length === 0) return;
             currentSlideIndex = (currentSlideIndex - 1 + slidesData.length) % slidesData.length;
             updateSliderView();
         }
@@ -533,6 +549,10 @@
         function renderAdminSlidesList() {
             const container = document.getElementById('admin-slides-list');
             if (!container) return;
+            if (!slidesData || slidesData.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500 col-span-full">لا توجد صور محفوظة بالسيستم.</p>`;
+                return;
+            }
             container.innerHTML = slidesData.map(s => `
                 <div class="bg-gray-950 border border-gray-800 p-3 rounded-xl space-y-2 flex flex-col justify-between">
                     <img src="${s.url}" class="w-full h-24 object-cover rounded-lg">
@@ -548,28 +568,33 @@
             `).join('');
         }
 
-        function submitSlideImage(e) {
+        async function submitSlideImage(e) {
             e.preventDefault();
             const id = document.getElementById('adm-slide-id').value;
             const title = document.getElementById('adm-slide-title').value.trim();
             const desc = document.getElementById('adm-slide-desc').value.trim();
             const url = document.getElementById('adm-slide-url').value.trim();
 
+            let error;
             if (id) {
-                slidesData = slidesData.map(s => s.id === id ? { id, title, desc, url } : s);
+                const res = await _supabase.from('slides').update({ title, desc, url }).eq('id', id);
+                error = res.error;
             } else {
-                slidesData.push({ id: Date.now().toString(), title, desc, url });
+                const res = await _supabase.from('slides').insert([{ title, desc, url }]);
+                error = res.error;
             }
 
-            localStorage.setItem('appSlidesData', JSON.stringify(slidesData));
-            resetSlideForm();
-            updateSliderView();
-            renderAdminSlidesList();
-            alert("تم حفظ وتحديث الصورة بنجاح!");
+            if (error) {
+                alert("خطأ أثناء حفظ الصورة في قاعدة البيانات: " + error.message);
+            } else {
+                alert("تم حفظ ونشر الصورة على جميع الأجهزة بنجاح!");
+                resetSlideForm();
+                await fetchSlidesData();
+            }
         }
 
         function editSlideItem(id) {
-            const slide = slidesData.find(s => s.id === id);
+            const slide = slidesData.find(s => s.id == id);
             if (!slide) return;
             document.getElementById('adm-slide-id').value = slide.id;
             document.getElementById('adm-slide-title').value = slide.title;
@@ -580,13 +605,15 @@
             document.getElementById('adm-slide-cancel').classList.remove('hidden');
         }
 
-        function deleteSlideItem(id) {
+        async function deleteSlideItem(id) {
             if (confirm("هل أنت متأكد من حذف هذه الصورة؟")) {
-                slidesData = slidesData.filter(s => s.id !== id);
-                localStorage.setItem('appSlidesData', JSON.stringify(slidesData));
-                if (currentSlideIndex >= slidesData.length) currentSlideIndex = 0;
-                updateSliderView();
-                renderAdminSlidesList();
+                const { error } = await _supabase.from('slides').delete().eq('id', id);
+                if (error) {
+                    alert("خطأ أثناء الحذف: " + error.message);
+                } else {
+                    alert("تم حذف الصورة بنجاح!");
+                    await fetchSlidesData();
+                }
             }
         }
 
@@ -1444,10 +1471,10 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
             checkAdminSession();
             resetQuickIcons();
-            updateSliderView();
+            await fetchSlidesData();
         });
     </script>
 </body>
