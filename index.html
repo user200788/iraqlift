@@ -440,7 +440,8 @@
                 <div class="flex items-center gap-4">
                     <div>
                         <h3 id="m-lifter-name" class="text-xl font-black text-white">---</h3>
-                        <p class="text-xs text-gray-400">آخر نادي: <span id="m-lifter-club" class="text-brand-400 font-bold">---</span> | الميلاد: <span id="m-lifter-year" class="text-white font-bold">---</span></p>
+                        <p class="text-xs text-gray-400"><span id="m-lifter-club"   class="text-white font-bold">---</span> | الجنس: <span id="m-lifter-gender"
+                             class="text-brand-400 font-bold">---</span> | الميلاد: <span id="m-lifter-year" class="text-white font-bold">---</span></p>
                     </div>
                 </div>
                 <button id="m-edit-lifter-btn" onclick="toggleEditLifterForm()" class="hidden bg-brand-600/20 hover:bg-brand-600 text-brand-400 hover:text-white border border-brand-500/30 px-3 py-1.5 rounded-lg text-xs font-bold transition">تعديل البيانات</button>
@@ -1077,9 +1078,9 @@
             const champ = cachedChampionships.find(c => c.id == championship_id);
             const isBenchOnly = champ && champ.type === 'benchpress';
 
-            const squat = isBenchOnly ? 0 : (parseFloat(document.getElementById('adm-r-squat').value) || 0);
+            const squat = isBenchOnly ? null : (parseFloat(document.getElementById('adm-r-squat').value) || 0);
             const bench = parseFloat(document.getElementById('adm-r-bench').value) || 0;
-            const deadlift = isBenchOnly ? 0 : (parseFloat(document.getElementById('adm-r-deadlift').value) || 0);
+            const deadlift = isBenchOnly ? null : (parseFloat(document.getElementById('adm-r-deadlift').value) || 0);
             const total = parseFloat(document.getElementById('adm-r-total').value) || 0;
 
             if (!championship_id || !lifter_id) {
@@ -1100,7 +1101,7 @@
                 bench, 
                 deadlift, 
                 total,
-                bench_only: isBenchOnly
+               
             };
 
             let error;
@@ -1331,10 +1332,12 @@
                     .eq('weight_category', w);
 
                 if (currentRecordType === 'bench_only') {
-                    query = query.eq('bench_only', true);
-                } else {
-                    query = query.or('bench_only.eq.false,bench_only.is.null');
-                }
+  // للرفعات الخاصة بالبنج فقط: السكوات والديدلفت تكون فارغة (null) أو صفر
+  query = query.is('squat', null);
+} else {
+  // لبطولات Full Power (SBD): السكوات غير فارغ ويكون أكبر من صفر
+  query = query.not('squat', 'is', null).gt('squat', 0);
+}
 
                 const { data } = await query;
 
@@ -1463,8 +1466,13 @@
                     const maxtotal = Math.max(...results.map(r => r.total || 0));
 
                     // احتساب أفضل رقم بنج في بطولات البنج اونلي
-                    const benchOnlyResults = results.filter(r => r.bench_only === true);
-                    const maxBenchOnly = benchOnlyResults.length > 0 ? Math.max(...benchOnlyResults.map(r => r.bench || 0)) : 0;
+                    // التصفية: جلب النتائج التي لا تحتوي على سكوات أو ديدلفت (بنج فقط)
+const benchOnlyResults = results.filter(r => (!r.squat || r.squat === 0) && (!r.deadlift || r.deadlift === 0));
+
+// احتساب أعلى رقم بنج فقط
+const maxBenchOnly = benchOnlyResults.length > 0 
+  ? Math.max(...benchOnlyResults.map(r => r.bench || 0)) 
+  : 0;
 
                     document.getElementById('m-lifter-squat').innerText = maxsquat + ' kg';
                     document.getElementById('m-lifter-bench').innerText = maxbench + ' kg';
