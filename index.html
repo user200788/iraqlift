@@ -174,17 +174,23 @@
 
                 <div id="single-champ-header" class="bg-gray-900 border border-gray-800 p-6 rounded-2xl shadow-xl"></div>
 
-                <div class="sticky top-20 z-40 bg-[#0f172a]/95 backdrop-blur border-y border-gray-800 py-3 px-4 flex items-center gap-2 overflow-x-auto">
-                    <span class="text-xs font-bold text-gray-400 shrink-0">الانتقال السريع:</span>
-                    <a href="#champ-sec--53" class="px-3 py-1 bg-gray-800 hover:bg-brand-600 text-white rounded-lg text-xs font-bold shrink-0">53 kg (ناشئين/شباب)</a>
-                    <a href="#champ-sec--59" class="px-3 py-1 bg-gray-800 hover:bg-brand-600 text-white rounded-lg text-xs font-bold shrink-0">59 kg</a>
-                    <a href="#champ-sec--66" class="px-3 py-1 bg-gray-800 hover:bg-brand-600 text-white rounded-lg text-xs font-bold shrink-0">66 kg</a>
-                    <a href="#champ-sec--74" class="px-3 py-1 bg-gray-800 hover:bg-brand-600 text-white rounded-lg text-xs font-bold shrink-0">74 kg</a>
-                    <a href="#champ-sec--83" class="px-3 py-1 bg-gray-800 hover:bg-brand-600 text-white rounded-lg text-xs font-bold shrink-0">83 kg</a>
-                    <a href="#champ-sec--93" class="px-3 py-1 bg-gray-800 hover:bg-brand-600 text-white rounded-lg text-xs font-bold shrink-0">93 kg</a>
-                    <a href="#champ-sec--105" class="px-3 py-1 bg-gray-800 hover:bg-brand-600 text-white rounded-lg text-xs font-bold shrink-0">105 kg</a>
-                    <a href="#champ-sec--120" class="px-3 py-1 bg-gray-800 hover:bg-brand-600 text-white rounded-lg text-xs font-bold shrink-0">120 kg</a>
-                    <a href="#champ-sec-+120" class="px-3 py-1 bg-gray-800 hover:bg-brand-600 text-white rounded-lg text-xs font-bold shrink-0">+120 kg</a>
+                <!-- أزرار الفئات العمرية الثلاث والشريط السريع للأوزان الخاص بالفئة -->
+                <div class="bg-gray-900 border border-gray-800 p-4 rounded-2xl shadow-xl space-y-4">
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="selectChampAgeTab('ناشئين')" id="champ-tab-btn-ناشئين" class="champ-age-tab-btn py-3 px-2 sm:px-4 rounded-xl font-black text-xs sm:text-sm border border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 transition text-center">
+                            👶 ناشئين
+                        </button>
+                        <button onclick="selectChampAgeTab('شباب')" id="champ-tab-btn-شباب" class="champ-age-tab-btn py-3 px-2 sm:px-4 rounded-xl font-black text-xs sm:text-sm border border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 transition text-center">
+                            👦 شباب
+                        </button>
+                        <button onclick="selectChampAgeTab('متقدمين')" id="champ-tab-btn-متقدمين" class="champ-age-tab-btn py-3 px-2 sm:px-4 rounded-xl font-black text-xs sm:text-sm border border-brand-500 bg-brand-600 text-white transition text-center shadow-lg">
+                            🏋️ متقدمين
+                        </button>
+                    </div>
+
+                    <div id="single-champ-quick-nav" class="sticky top-20 z-40 bg-[#0f172a]/95 backdrop-blur border-t border-gray-800 pt-3 pb-1 px-2 flex items-center gap-2 overflow-x-auto">
+                        <!-- يتم توليد الفئات الوزنية ديناميكياً حسب الفئة العمرية المختارة -->
+                    </div>
                 </div>
 
                 <div id="single-champ-tables-container" class="space-y-10"></div>
@@ -195,12 +201,26 @@
             <div class="border-b border-gray-800 pb-5">
                 <h2 class="text-2xl font-black text-white">الأرقام القياسية العراقية (IPF Records)</h2>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <button onclick="selectRecordAgeTab('ناشئين')" id="rec-tab-ناشئين" class="rec-age-btn bg-gray-800/80 border border-gray-700 p-4 rounded-xl font-bold text-sm">ناشئين</button>
-                <button onclick="selectRecordAgeTab('شباب')" id="rec-tab-شباب" class="rec-age-btn bg-gray-800/80 border border-gray-700 p-4 rounded-xl font-bold text-sm">شباب</button>
-                <button onclick="selectRecordAgeTab('متقدمين')" id="rec-tab-متقدمين" class="rec-age-btn bg-brand-600 text-white p-4 rounded-xl font-bold text-sm">متقدمين</button>
-                <button onclick="selectRecordAgeTab('رواد')" id="rec-tab-رواد" class="rec-age-btn bg-gray-800/80 border border-gray-700 p-4 rounded-xl font-bold text-sm">رواد</button>
+            
+            <div class="space-y-4">
+                <!-- أزرار اختيار الفئة العمرية -->
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="selectRecordAgeTab('ناشئين')" id="rec-tab-ناشئين" class="rec-age-btn bg-gray-800/80 border border-gray-700 p-4 rounded-xl font-bold text-sm">ناشئين</button>
+                    <button onclick="selectRecordAgeTab('شباب')" id="rec-tab-شباب" class="rec-age-btn bg-gray-800/80 border border-gray-700 p-4 rounded-xl font-bold text-sm">شباب</button>
+                    <button onclick="selectRecordAgeTab('متقدمين')" id="rec-tab-متقدمين" class="rec-age-btn bg-brand-600 text-white p-4 rounded-xl font-bold text-sm">متقدمين</button>
+                </div>
+
+                <!-- أزرار تصفية نوع البطولة (SBD / Bench Only) -->
+                <div class="flex gap-3 justify-center bg-gray-900 border border-gray-800 p-2 rounded-xl">
+                    <button onclick="selectRecordTypeTab('sbd')" id="rec-type-sbd" class="rec-type-btn flex-1 py-2.5 rounded-lg font-extrabold text-xs sm:text-sm transition bg-brand-600 text-white shadow">
+                        🏋️ Full Powerlifting (SBD)
+                    </button>
+                    <button onclick="selectRecordTypeTab('bench_only')" id="rec-type-bench_only" class="rec-type-btn flex-1 py-2.5 rounded-lg font-extrabold text-xs sm:text-sm transition bg-gray-800 border border-gray-700 text-gray-300 hover:bg-gray-700">
+                        💪 Bench Only
+                    </button>
+                </div>
             </div>
+                
             <div id="records-results-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </section>
 
@@ -458,11 +478,12 @@
 
             <div>
                 <h4 class="text-xs font-extrabold text-gray-300 uppercase mb-2">الأرقام الشخصية المعتمدة (PB)</h4>
-                <div class="grid grid-cols-4 gap-2 text-center text-xs">
-                    <div class="bg-gray-950 p-2.5 rounded-xl border border-gray-800"><span class="block text-gray-400 font-bold mb-1">Squat</span><span id="m-lifter-squat" class="font-black text-white text-sm">0</span></div>
-                    <div class="bg-gray-950 p-2.5 rounded-xl border border-gray-800"><span class="block text-gray-400 font-bold mb-1">Bench</span><span id="m-lifter-bench" class="font-black text-white text-sm">0</span></div>
-                    <div class="bg-gray-950 p-2.5 rounded-xl border border-gray-800"><span class="block text-gray-400 font-bold mb-1">Deadlift</span><span id="m-lifter-deadlift" class="font-black text-white text-sm">0</span></div>
-                    <div class="bg-brand-500/10 p-2.5 rounded-xl border border-brand-500/30"><span class="block text-brand-400 font-bold mb-1">Total</span><span id="m-lifter-total" class="font-black text-brand-400 text-sm">0</span></div>
+                <div class="grid grid-cols-5 gap-1.5 text-center text-xs">
+                    <div class="bg-gray-950 p-2 rounded-xl border border-gray-800"><span class="block text-gray-400 font-bold mb-1 text-[10px]">Squat</span><span id="m-lifter-squat" class="font-black text-white text-xs sm:text-sm">0</span></div>
+                    <div class="bg-gray-950 p-2 rounded-xl border border-gray-800"><span class="block text-gray-400 font-bold mb-1 text-[10px]">Bench</span><span id="m-lifter-bench" class="font-black text-white text-xs sm:text-sm">0</span></div>
+                    <div class="bg-gray-950 p-2 rounded-xl border border-gray-800"><span class="block text-gray-400 font-bold mb-1 text-[10px]">Deadlift</span><span id="m-lifter-deadlift" class="font-black text-white text-xs sm:text-sm">0</span></div>
+                    <div class="bg-brand-500/10 p-2 rounded-xl border border-brand-500/30"><span class="block text-brand-400 font-bold mb-1 text-[10px]">Total</span><span id="m-lifter-total" class="font-black text-brand-400 text-xs sm:text-sm">0</span></div>
+                    <div class="bg-amber-500/10 p-2 rounded-xl border border-amber-500/30"><span class="block text-amber-400 font-bold mb-1 text-[10px]">Bench Only</span><span id="m-lifter-bench-only" class="font-black text-amber-400 text-xs sm:text-sm">0</span></div>
                 </div>
             </div>
             <div>
@@ -485,6 +506,12 @@
         let cachedChampionships = [];
         let cachedLiftersMap = {};
         let currentRecordAge = 'متقدمين';
+        let currentRecordType = 'sbd'; // sbd أو bench_only
+
+        // نتائج البطولة المفتوحة حالياً للتنقل التفاعلي بين الفئات
+        let currentChampResults = [];
+        let currentChampObject = null;
+        let selectedChampAgeTab = 'متقدمين';
 
         // صور المعرض التفاعلي السريعة - جلب مباشر من سوبابيس
         let slidesData = [];
@@ -767,7 +794,7 @@
             renderChampionshipCards(filtered);
         }
 
-        // OPEN A SELECTED CHAMPIONSHIP AND EXPOSE ALL WEIGHT CLASSES
+        // OPEN A SELECTED CHAMPIONSHIP AND EXPOSE WEIGHT CLASSES ACCORDING TO SELECTED AGE TAB
         async function openChampionshipDetails(champId) {
             document.getElementById('championships-list-view').classList.add('hidden');
             document.getElementById('championship-detail-view').classList.remove('hidden');
@@ -777,8 +804,8 @@
                 if (champs) cachedChampionships = champs;
             }
 
-            const champ = cachedChampionships.find(c => c.id == champId);
-            const isBenchOnly = champ && champ.type === 'benchpress';
+            currentChampObject = cachedChampionships.find(c => c.id == champId);
+            const isBenchOnly = currentChampObject && currentChampObject.type === 'benchpress';
             const isAdmin = localStorage.getItem('adminSessionActive') === 'true';
 
             const headerContainer = document.getElementById('single-champ-header');
@@ -790,10 +817,10 @@
                         <span class="px-2.5 py-1 bg-brand-500/10 text-brand-400 text-xs font-extrabold rounded">IPF Score Sheet</span>
                         ${isBenchOnly ? '<span class="px-2.5 py-1 bg-amber-500/20 text-amber-400 text-xs font-extrabold rounded">بطولة بنج برس فقط</span>' : ''}
                     </div>
-                    ${isAdmin ? `<button onclick="prepareEditChampionshipDirect('${champ.id}')" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition">تعديل بيانات هذه البطولة</button>` : ''}
+                    ${isAdmin ? `<button onclick="prepareEditChampionshipDirect('${currentChampObject ? currentChampObject.id : champId}')" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition">تعديل بيانات هذه البطولة</button>` : ''}
                 </div>
-                <h2 class="text-3xl font-black text-white mt-1">${champ ? champ.name : 'البطولة'}</h2>
-                <p class="text-xs text-gray-400 font-bold mt-1">المكان: ${champ ? champ.location : '-'} | التاريخ: ${champ ? champ.date : '-'}</p>
+                <h2 class="text-3xl font-black text-white mt-1">${currentChampObject ? currentChampObject.name : 'البطولة'}</h2>
+                <p class="text-xs text-gray-400 font-bold mt-1">المكان: ${currentChampObject ? currentChampObject.location : '-'} | التاريخ: ${currentChampObject ? currentChampObject.date : '-'}</p>
             `;
 
             tablesContainer.innerHTML = `<div class="text-center py-10 text-gray-400 font-bold">جاري استخراج جداول الفئات...</div>`;
@@ -804,16 +831,60 @@
                 .eq('championship_id', champId)
                 .order('total', { ascending: false });
 
-            let html = '';
-            const allPossibleWeights = ['-53', '-59', '-66', '-74', '-83', '-93', '-105', '-120', '+120'];
+            currentChampResults = results || [];
 
-            allPossibleWeights.forEach(weight => {
-                const filtered = (results || []).filter(r => r.weight_category === weight);
+            // اختيار فئة "متقدمين" كافتراضية وإظهار الأوزان الخاصة بها
+            selectChampAgeTab('متقدمين');
+        }
+
+        // اختيار الفئة العمرية لعرض أوزانها وتصفية نتائجها
+        function selectChampAgeTab(age) {
+            selectedChampAgeTab = age;
+
+            // تحديث الألوان وشكل الأزرار الأربعة لتميز الأيقونة المختارة
+            document.querySelectorAll('.champ-age-tab-btn').forEach(btn => {
+                btn.className = 'champ-age-tab-btn py-3 px-2 sm:px-4 rounded-xl font-black text-xs sm:text-sm border border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 transition text-center';
+            });
+            const activeBtn = document.getElementById(`champ-tab-btn-${age}`);
+            if (activeBtn) {
+                activeBtn.className = 'champ-age-tab-btn py-3 px-2 sm:px-4 rounded-xl font-black text-xs sm:text-sm border border-brand-500 bg-brand-600 text-white transition text-center shadow-lg';
+            }
+
+            renderChampCategoryTables();
+        }
+
+        function renderChampCategoryTables() {
+            const tablesContainer = document.getElementById('single-champ-tables-container');
+            const quickNavContainer = document.getElementById('single-champ-quick-nav');
+            const isBenchOnly = currentChampObject && currentChampObject.type === 'benchpress';
+            const isAdmin = localStorage.getItem('adminSessionActive') === 'true';
+
+            const availableWeights = getWeightClassesByAge(selectedChampAgeTab);
+
+            // توليد أزرار الانتقال السريع للأوزان الخاصة بهذه الفئة فقط
+            if (quickNavContainer) {
+                quickNavContainer.innerHTML = `
+                    <span class="text-xs font-bold text-gray-400 shrink-0">الأوزان:</span>
+                    ${availableWeights.map(w => `
+                        <a href="#champ-sec-${w.replace('+', 'plus')}" class="px-3 py-1 bg-gray-800 hover:bg-brand-600 text-white rounded-lg text-xs font-bold shrink-0 transition">
+                            ${w} kg
+                        </a>
+                    `).join('')}
+                `;
+            }
+
+            let html = '';
+
+            availableWeights.forEach(weight => {
+                const filtered = (currentChampResults || []).filter(r => 
+                    (r.age_category === selectedChampAgeTab || (!r.age_category && selectedChampAgeTab === 'متقدمين')) &&
+                    r.weight_category === weight
+                );
 
                 html += `
-                    <div id="champ-sec-${weight}" class="scroll-mt-36 bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl space-y-3 p-5">
+                    <div id="champ-sec-${weight.replace('+', 'plus')}" class="scroll-mt-36 bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl space-y-3 p-5">
                         <div class="flex justify-between items-center border-r-4 border-brand-500 pr-3">
-                            <h4 class="text-lg font-black text-white">نتائج فئة وزن <span class="text-brand-400">${weight} kg</span> ${weight === '-53' ? '<span class="text-xs text-gray-400 font-bold">(ناشئين / شباب فقط)</span>' : ''}</h4>
+                            <h4 class="text-lg font-black text-white">فئة وزن <span class="text-brand-400">${weight} kg</span> (${selectedChampAgeTab})</h4>
                             <span class="text-xs text-gray-300 font-extrabold bg-gray-800 px-3 py-1 rounded-full">عدد المشاركين: ${filtered.length}</span>
                         </div>
 
@@ -839,7 +910,7 @@
                 const colSpan = (isBenchOnly ? 7 : 9) + (isAdmin ? 1 : 0);
 
                 if (filtered.length === 0) {
-                    html += `<tr><td colspan="${colSpan}" class="text-center py-4 text-xs text-gray-500 font-bold">لا توجد محاولات مسجلة لهذه الفئة الوزنية.</td></tr>`;
+                    html += `<tr><td colspan="${colSpan}" class="text-center py-4 text-xs text-gray-500 font-bold">لا توجد محاولات مسجلة لهذه الفئة الوزنية (${selectedChampAgeTab}).</td></tr>`;
                 } else {
                     filtered.forEach((r, idx) => {
                         const rank = idx + 1;
@@ -867,7 +938,7 @@
                                     <td class="text-center">
                                         <div class="flex items-center justify-center gap-1">
                                             <button onclick="prepareEditLifterResult('${r.id}')" class="bg-amber-600/20 hover:bg-amber-600 text-amber-400 hover:text-white border border-amber-500/30 px-2.5 py-1 rounded text-xs font-bold transition">تعديل الأرقام</button>
-                                            <button onclick="removeLifterFromChampionshipOnly('${r.id}', '${champId}')" title="حذف من هذه البطولة فقط" class="bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/30 px-2 py-1 rounded text-xs font-bold transition">إلغاء المشاركة</button>
+                                            <button onclick="removeLifterFromChampionshipOnly('${r.id}', '${currentChampObject.id}')" title="حذف من هذه البطولة فقط" class="bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/30 px-2 py-1 rounded text-xs font-bold transition">إلغاء المشاركة</button>
                                         </div>
                                     </td>
                                 ` : ''}
@@ -1006,9 +1077,9 @@
             const champ = cachedChampionships.find(c => c.id == championship_id);
             const isBenchOnly = champ && champ.type === 'benchpress';
 
-            const squat = isBenchOnly ? 0 : (parseFloat(document.getElementById('adm-r-squat').value) || 0);
+            const squat = isBenchOnly ? null : (parseFloat(document.getElementById('adm-r-squat').value) || 0);
             const bench = parseFloat(document.getElementById('adm-r-bench').value) || 0;
-            const deadlift = isBenchOnly ? 0 : (parseFloat(document.getElementById('adm-r-deadlift').value) || 0);
+            const deadlift = isBenchOnly ? null : (parseFloat(document.getElementById('adm-r-deadlift').value) || 0);
             const total = parseFloat(document.getElementById('adm-r-total').value) || 0;
 
             if (!championship_id || !lifter_id) {
@@ -1019,7 +1090,17 @@
             // Save & Update Lifter profile details dynamically into the lifter's database record
             await _supabase.from('lifters').update({ club, birth_year, gender }).eq('id', lifter_id);
 
-            const payload = { championship_id, lifter_id, age_category, weight_category, squat, bench, deadlift, total };
+            const payload = { 
+                championship_id, 
+                lifter_id, 
+                age_category, 
+                weight_category, 
+                squat, 
+                bench, 
+                deadlift, 
+                total,
+                
+            };
 
             let error;
             if (result_id) {
@@ -1225,20 +1306,38 @@
             loadRecordsTab();
         }
 
+        function selectRecordTypeTab(type) {
+            currentRecordType = type;
+            document.querySelectorAll('.rec-type-btn').forEach(b => b.className = 'rec-type-btn flex-1 py-2.5 rounded-lg font-extrabold text-xs sm:text-sm transition bg-gray-800 border border-gray-700 text-gray-300 hover:bg-gray-700');
+            const btn = document.getElementById(`rec-type-${type}`);
+            if (btn) btn.className = 'rec-type-btn flex-1 py-2.5 rounded-lg font-extrabold text-xs sm:text-sm transition bg-brand-600 text-white shadow';
+            loadRecordsTab();
+        }
+
         async function loadRecordsTab() {
             await fetchAllLiftersMap();
             const container = document.getElementById('records-results-container');
-            container.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-500 font-bold">جاري احتساب الأرقام...</div>`;
+            container.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-500 font-bold">جاري احتساب الأرقام القياسية...</div>`;
 
             const availableWeights = getWeightClassesByAge(currentRecordAge);
             let html = '';
 
             for (let w of availableWeights) {
-                const { data } = await _supabase
+                let query = _supabase
                     .from('results')
                     .select('*')
                     .eq('age_category', currentRecordAge)
                     .eq('weight_category', w);
+
+                if (currentRecordType === 'bench_only') {
+  // للرفعات الخاصة بالبنج فقط: السكوات والديدلفت تكون فارغة (null) أو صفر
+  query = query.is('squat', null);
+} else {
+  // لبطولات Full Power (SBD): السكوات غير فارغ ويكون أكبر من صفر
+  query = query.not('squat', 'is', null).gt('squat', 0);
+}
+
+                const { data } = await query;
 
                 let topSquat = null, topBench = null, topDead = null, topTotal = null;
 
@@ -1265,7 +1364,10 @@
                     <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 shadow-lg space-y-4">
                         <div class="flex justify-between items-center border-b border-gray-800 pb-3">
                             <h4 class="text-lg font-black text-white">فئة وزن ${w} kg</h4>
-                            <span class="text-xs bg-brand-500/10 text-brand-400 border border-brand-500/20 px-2.5 py-1 rounded-full font-bold">${currentRecordAge}</span>
+                            <div class="flex gap-1">
+                                <span class="text-xs bg-brand-500/10 text-brand-400 border border-brand-500/20 px-2.5 py-1 rounded-full font-bold">${currentRecordAge}</span>
+                                <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-1 rounded-full font-bold">${currentRecordType === 'bench_only' ? 'Bench Only' : 'SBD'}</span>
+                            </div>
                         </div>
                         <div class="grid grid-cols-2 gap-3 text-xs">
                             <div class="bg-gray-950 p-3 rounded-xl border border-gray-800">
@@ -1361,16 +1463,25 @@
                     const maxdeadlift = Math.max(...results.map(r => r.deadlift || 0));
                     const maxtotal = Math.max(...results.map(r => r.total || 0));
 
+                    // احتساب أفضل رقم بنج في بطولات البنج اونلي
+                    // التصفية: جلب النتائج التي لا تحتوي على سكوات أو ديدلفت (بنج فقط)
+const benchOnlyResults = results.filter(r => (!r.squat || r.squat === 0) && (!r.deadlift || r.deadlift === 0));
+
+// احتساب أعلى رقم بنج فقط
+const maxBenchOnly = benchOnlyResults.length > 0 
+  ? Math.max(...benchOnlyResults.map(r => r.bench || 0)) 
+  : 0;
                     document.getElementById('m-lifter-squat').innerText = maxsquat + ' kg';
                     document.getElementById('m-lifter-bench').innerText = maxbench + ' kg';
                     document.getElementById('m-lifter-deadlift').innerText = maxdeadlift + ' kg';
                     document.getElementById('m-lifter-total').innerText = maxtotal + ' kg';
+                    document.getElementById('m-lifter-bench-only').innerText = maxBenchOnly + ' kg';
 
                     document.getElementById('m-lifter-history').innerHTML = results.map(r => `
                         <div class="bg-gray-950 p-3 rounded-xl border border-gray-800 text-xs flex justify-between items-center gap-2">
                             <div>
                                 <span onclick="openChampionshipDetailsFromModal('${r.championship_id}')" class="font-bold text-gray-200 hover:text-brand-400 cursor-pointer underline transition block">
-                                    ${champsMap[r.championship_id] || 'بطولة رسمية'} ➔
+                                    ${champsMap[r.championship_id] || 'بطولة رسمية'} ${r.bench_only ? '(Bench Only)' : ''} ➔
                                 </span>
                                 <span class="text-[11px] text-gray-400 font-semibold">فئة: ${r.age_category || 'متقدمين'} | وزن: ${r.weight_category} kg</span>
                             </div>
@@ -1382,6 +1493,7 @@
                     document.getElementById('m-lifter-bench').innerText = '0 kg';
                     document.getElementById('m-lifter-deadlift').innerText = '0 kg';
                     document.getElementById('m-lifter-total').innerText = '0 kg';
+                    document.getElementById('m-lifter-bench-only').innerText = '0 kg';
                     document.getElementById('m-lifter-history').innerHTML = `<p class="text-xs text-gray-500 font-bold">لا توجد مشاركات مثبتة.</p>`;
                 }
 
