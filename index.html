@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="ar" dir="rtl" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -213,15 +213,18 @@
                 <!-- أزرار تصفية نوع البطولة (SBD / Bench Only) -->
                 <div class="flex gap-3 justify-center bg-gray-900 border border-gray-800 p-2 rounded-xl">
                     <button onclick="selectRecordTypeTab('sbd')" id="rec-type-sbd" class="rec-type-btn flex-1 py-2.5 rounded-lg font-extrabold text-xs sm:text-sm transition bg-brand-600 text-white shadow">
-                        🏋️ Full Powerlifting (SBD)
+                         Full Powerlifting (SBD)
                     </button>
                     <button onclick="selectRecordTypeTab('bench_only')" id="rec-type-bench_only" class="rec-type-btn flex-1 py-2.5 rounded-lg font-extrabold text-xs sm:text-sm transition bg-gray-800 border border-gray-700 text-gray-300 hover:bg-gray-700">
-                        💪 Bench Only
+                      Bench Only
                     </button>
                 </div>
             </div>
                 
-            <div id="records-results-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            <div id="records-results-co
+            
+            
+            ntainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </section>
 
         <section id="tab-lifters" class="hidden space-y-6 fade-in">
@@ -929,7 +932,7 @@
                                 </td>
                                 <td class="text-center text-gray-300">${r.age_category || 'متقدمين'}</td>
                                 <td class="text-center text-gray-400">${lifter.birth_year || '-'}</td>
-                                <td class="text-gray-300">${lifter.club || 'مستقل'}</td>
+                                <td class="text-gray-300">${r.club || lifter.club || 'مستقل'}</td>
                                 ${!isBenchOnly ? `<td class="text-center font-bold text-gray-200">${r.squat || 0} kg</td>` : ''}
                                 <td class="text-center font-bold text-gray-200">${r.bench || 0} kg</td>
                                 ${!isBenchOnly ? `<td class="text-center font-bold text-gray-200">${r.deadlift || 0} kg</td>` : ''}
@@ -1078,7 +1081,7 @@
             const isBenchOnly = champ && champ.type === 'benchpress';
 
             const squat = isBenchOnly ? null : (parseFloat(document.getElementById('adm-r-squat').value) || 0);
-            const bench = parseFloat(document.getElementById('adm-r-bench').value) || 0;
+            const bench = parseFloat(document.getElementById('adm-r-bench_only').value) || 0;
             const deadlift = isBenchOnly ? null : (parseFloat(document.getElementById('adm-r-deadlift').value) || 0);
             const total = parseFloat(document.getElementById('adm-r-total').value) || 0;
 
@@ -1088,11 +1091,12 @@
             }
 
             // Save & Update Lifter profile details dynamically into the lifter's database record
-            await _supabase.from('lifters').update({ club, birth_year, gender }).eq('id', lifter_id);
+            await _supabase.from('lifters').update({  birth_year, gender }).eq('id', lifter_id);
 
             const payload = { 
                 championship_id, 
                 lifter_id, 
+                club,
                 age_category, 
                 weight_category, 
                 squat, 
@@ -1465,7 +1469,8 @@
 
                     // احتساب أفضل رقم بنج في بطولات البنج اونلي
                     // التصفية: جلب النتائج التي لا تحتوي على سكوات أو ديدلفت (بنج فقط)
-const benchOnlyResults = results.filter(r => (!r.squat || r.squat === 0) && (!r.deadlift || r.deadlift === 0));
+const benchOnlyResults = results.filter(r => (!r.squat || r.squat === 0) && (!r.deadlift || r.deadlift === 0)&& (r.bench || r.bench === 0));
+
 
 // احتساب أعلى رقم بنج فقط
 const maxBenchOnly = benchOnlyResults.length > 0 
